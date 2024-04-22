@@ -9,8 +9,8 @@ def test_successful_load(page: Page) -> None:
     login_page.navigate_to_login()
 
     expect(login_page.login_container).to_be_visible()
-    expect(page).to_have_url("https://www.saucedemo.com/")
-    expect(page).to_have_title("Swag Labs")
+    expect(login_page.page).to_have_url("https://www.saucedemo.com/")
+    expect(login_page.page).to_have_title("Swag Labs")
 
 
 @pytest.mark.parametrize(
@@ -26,9 +26,10 @@ def test_successful_load(page: Page) -> None:
 def test_successful_login(page: Page, username: str) -> None:
     login_page = SauceDemoLoginPage(page)
     login_page.navigate_to_login()
-
     login_page.login(username, "secret_sauce")
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
+
+    expected_url = "https://www.saucedemo.com/inventory.html"
+    expect(login_page.page).to_have_url(expected_url)
 
 
 @pytest.mark.parametrize(
@@ -81,6 +82,12 @@ def test_successful_login(page: Page, username: str) -> None:
             "different_password",
             "do not match any user in this service",
         ),
+        # misspelled user
+        (
+            "standarduser",
+            "secret_sauce",
+            "do not match any user in this service",
+        ),
         # locked out user
         (
             "locked_out_user",
@@ -89,8 +96,8 @@ def test_successful_login(page: Page, username: str) -> None:
         ),
         # empty fields
         ("", "", "Username is required"),
-        ("", "test", "Username is required"),
-        ("test", "", "Password is required"),
+        ("", "secret_sauce", "Username is required"),
+        ("standard_user", "", "Password is required"),
     ],
 )
 def test_failing_login(
@@ -98,10 +105,8 @@ def test_failing_login(
 ) -> None:
     login_page = SauceDemoLoginPage(page)
     login_page.navigate_to_login()
-
     expect(login_page.error_container).not_to_be_visible()
 
     login_page.login(username, password)
-
     expect(login_page.error_container).to_be_visible()
     expect(login_page.error_container).to_contain_text(expected_message)
