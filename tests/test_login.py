@@ -1,6 +1,17 @@
 import pytest
 from playwright.sync_api import Page, expect
 
+from pages.login_page import SauceDemoLoginPage
+
+
+def test_successful_load(page: Page) -> None:
+    login_page = SauceDemoLoginPage(page)
+    login_page.navigate_to_login()
+
+    expect(login_page.login_container).to_be_visible()
+    expect(page).to_have_url("https://www.saucedemo.com/")
+    expect(page).to_have_title("Swag Labs")
+
 
 @pytest.mark.parametrize(
     "username",
@@ -13,43 +24,84 @@ from playwright.sync_api import Page, expect
     ],
 )
 def test_successful_login(page: Page, username: str) -> None:
-    page.goto("https://www.saucedemo.com/")
+    login_page = SauceDemoLoginPage(page)
+    login_page.navigate_to_login()
 
-    username_field = page.locator("#user-name")
-    password_field = page.locator("#password")
-    login_button = page.locator("#login-button")
-
-    username_field.fill(username)
-    password_field.fill("secret_sauce")
-    login_button.click()
-
+    login_page.login(username, "secret_sauce")
     expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
 
 
 @pytest.mark.parametrize(
-    "username, password",
+    "username, password, expected_message",
     [
-        ("standard_user", "wrong_password"),
-        ("locked_out_user", "wrong_password"),
-        ("problem_user", "wrong_password"),
-        ("performance_glitch_user", "wrong_password"),
-        ("error_user", "wrong_password"),
-        ("visual_user", "wrong_password"),
+        # wrong passwords
+        (
+            "standard_user",
+            "wrong_password",
+            "do not match any user in this service",
+        ),
+        (
+            "locked_out_user",
+            "wrong_password",
+            "do not match any user in this service",
+        ),
+        (
+            "problem_user",
+            "wrong_password",
+            "do not match any user in this service",
+        ),
+        (
+            "performance_glitch_user",
+            "wrong_password",
+            "do not match any user in this service",
+        ),
+        (
+            "error_user",
+            "wrong_password",
+            "do not match any user in this service",
+        ),
+        (
+            "visual_user",
+            "wrong_password",
+            "do not match any user in this service",
+        ),
+        (
+            "standard_user",
+            "different_password",
+            "do not match any user in this service",
+        ),
+        # unregistered user
+        (
+            "not_a_user",
+            "secret_sauce",
+            "do not match any user in this service",
+        ),
+        (
+            "not_a_user",
+            "different_password",
+            "do not match any user in this service",
+        ),
+        # locked out user
+        (
+            "locked_out_user",
+            "secret_sauce",
+            "Sorry, this user has been locked out",
+        ),
+        # empty fields
+        ("", "", "Username is required"),
+        ("", "test", "Username is required"),
+        ("test", "", "Password is required"),
     ],
 )
-def test_failing_login(page: Page, username: str, password: str) -> None:
-    page.goto("https://www.saucedemo.com/")
+def test_failing_login(
+    page: Page, username: str, password: str, expected_message: str
+) -> None:
+    login_page = SauceDemoLoginPage(page)
+    login_page.navigate_to_login()
 
-    username_field = page.locator("#user-name")
-    password_field = page.locator("#password")
-    login_button = page.locator("#login-button")
-    error_locator = '[class="error-message-container error"]'
-    error_container = page.locator(error_locator)
+    expect(login_page.error_container).not_to_be_visible()
 
-    expect(error_container).not_to_be_visible()
+    login_page.login(username, password)
 
-    username_field.fill(username)
-    password_field.fill(password)
-    login_button.click()
-
-    expect(error_container).to_be_visible()
+    expect(login_page.error_container).to_be_visible()
+    expect(login_page.error_container).to_contain_text(expected_message)
