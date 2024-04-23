@@ -1,13 +1,9 @@
 import pytest
-from playwright.sync_api import Page, expect
-
+from playwright.sync_api import expect
 from pages.login_page import SauceDemoLoginPage
 
 
-def test_successful_load(page: Page) -> None:
-    login_page = SauceDemoLoginPage(page)
-    login_page.navigate_to_login()
-
+def test_successful_load(login_page: SauceDemoLoginPage) -> None:
     expect(login_page.login_container).to_be_visible()
     expect(login_page.page).to_have_url("https://www.saucedemo.com/")
     expect(login_page.page).to_have_title("Swag Labs")
@@ -23,13 +19,14 @@ def test_successful_load(page: Page) -> None:
         "visual_user",
     ],
 )
-def test_successful_login(page: Page, username: str) -> None:
-    login_page = SauceDemoLoginPage(page)
-    login_page.navigate_to_login()
+def test_successful_login(
+    login_page: SauceDemoLoginPage, username: str
+) -> None:
     login_page.login(username, "secret_sauce")
 
-    expected_url = "https://www.saucedemo.com/inventory.html"
-    expect(login_page.page).to_have_url(expected_url)
+    expect(login_page.page).to_have_url(
+        "https://www.saucedemo.com/inventory.html"
+    )
 
 
 @pytest.mark.parametrize(
@@ -101,12 +98,13 @@ def test_successful_login(page: Page, username: str) -> None:
     ],
 )
 def test_failing_login(
-    page: Page, username: str, password: str, expected_message: str
+    login_page: SauceDemoLoginPage,
+    username: str,
+    password: str,
+    expected_message: str,
 ) -> None:
-    login_page = SauceDemoLoginPage(page)
-    login_page.navigate_to_login()
     expect(login_page.error_container).not_to_be_visible()
-
     login_page.login(username, password)
+
     expect(login_page.error_container).to_be_visible()
     expect(login_page.error_container).to_contain_text(expected_message)

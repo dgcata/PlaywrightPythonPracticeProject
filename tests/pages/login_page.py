@@ -3,15 +3,12 @@ from playwright.sync_api import Page
 
 class SauceDemoLoginPage:
     def __init__(self, page: Page) -> None:
-        error_container_locator = '[class="error-message-container error"]'
-        login_container_locator = '[data-test="login-container"]'
-
         self.page = page
         self.username_field = page.locator("#user-name")
         self.password_field = page.locator("#password")
         self.login_button = page.locator("#login-button")
-        self.error_container = page.locator(error_container_locator)
-        self.login_container = page.locator(login_container_locator)
+        self.error_container = page.locator("[data-test=\"error\"]")
+        self.login_container = page.locator("#login_button_container")
 
     def navigate_to_login(self) -> None:
         self.page.goto("https://www.saucedemo.com/")
