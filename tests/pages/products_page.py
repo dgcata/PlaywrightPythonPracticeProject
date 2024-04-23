@@ -3,15 +3,6 @@ from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 
 
 class SauceDemoProductsPage(SauceDemoLoginPage):
-    VALID_USERNAMES = [
-        "standard_user",
-        "problem_user",
-        "performance_glitch_user",
-        "error_user",
-        "visual_user",
-    ]
-    PASSWORD = "secret_sauce"
-
     def __init__(self, page: Page) -> None:
         super().__init__(page)
 

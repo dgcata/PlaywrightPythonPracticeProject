@@ -6,6 +6,15 @@ class InvalidUsernameException(Exception):
 
 
 class SauceDemoLoginPage:
+    VALID_USERNAMES = [
+        "standard_user",
+        "problem_user",
+        "performance_glitch_user",
+        "error_user",
+        "visual_user",
+    ]
+    PASSWORD = "secret_sauce"
+
     def __init__(self, page: Page) -> None:
         self.page = page
         self.username_field = page.locator("#user-name")
