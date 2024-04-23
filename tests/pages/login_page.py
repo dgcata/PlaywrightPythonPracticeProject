@@ -7,8 +7,8 @@ class SauceDemoLoginPage:
         self.username_field = page.locator("#user-name")
         self.password_field = page.locator("#password")
         self.login_button = page.locator("#login-button")
-        self.error_container = page.locator("[data-test=\"error\"]")
         self.login_container = page.locator("#login_button_container")
+        self.error_container = page.locator('[data-test="error"]')
 
     def navigate_to_login(self) -> None:
         self.page.goto("https://www.saucedemo.com/")
