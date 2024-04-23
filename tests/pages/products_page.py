@@ -3,6 +3,15 @@ from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 
 
 class SauceDemoProductsPage(SauceDemoLoginPage):
+    VALID_USERNAMES = [
+        "standard_user",
+        "problem_user",
+        "performance_glitch_user",
+        "error_user",
+        "visual_user",
+    ]
+    PASSWORD = "secret_sauce"
+
     def __init__(self, page: Page) -> None:
         super().__init__(page)
 
@@ -19,17 +28,16 @@ class SauceDemoProductsPage(SauceDemoLoginPage):
             '[data-test="logout-sidebar-link"]'
         )
 
-    def navigate_to_inventory_standard(self) -> None:
-        self.navigate_to_login()
-        self.login("standard_user", "secret_sauce")
-
     def navigate_to_inventory_as_user(self, username: str) -> None:
-        if username == "locked_out_user":
+        if username not in self.VALID_USERNAMES:
             raise InvalidUsernameException(
                 f"username '{username}' is an invalid username"
             )
         self.navigate_to_login()
-        self.login(username, "secret_sauce")
+        self.login(username, self.PASSWORD)
+
+    def navigate_to_inventory_standard(self) -> None:
+        self.navigate_to_inventory_as_user("standard_user")
 
     def logout(self) -> None:
         self.sidebar_button.click()
