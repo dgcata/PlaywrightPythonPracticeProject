@@ -33,10 +33,25 @@ My task is to create the following test cases:
 To run this project:
 
 1. First install the dependencies
-    > pip install -r requirements.txt
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
 2. Install the playwright dependencies
-    > playwright install
+
+    ```bash
+    playwright install
+    ```
+
 3. Then you may run pytest with this simple command
-    > pytest
+
+    ```bash
+    pytest
+    ```
+
 4. If you want to run in headed mode, or in all or some browser you may run this code
-    > pytest --headed --browser chromium --browser firefox --browser webkit
+
+    ```bash
+    pytest --headed --browser chromium --browser firefox --browser webkit
+    ```
