@@ -1,5 +1,5 @@
-from pages.login_page import SauceDemoLoginPage
 from playwright.sync_api import Page, ElementHandle
+from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 
 
 class SauceDemoProductsPage(SauceDemoLoginPage):
@@ -24,6 +24,10 @@ class SauceDemoProductsPage(SauceDemoLoginPage):
         self.login("standard_user", "secret_sauce")
 
     def navigate_to_inventory_as_user(self, username: str) -> None:
+        if username == "locked_out_user":
+            raise InvalidUsernameException(
+                f"username '{username}' is an invalid username"
+            )
         self.navigate_to_login()
         self.login(username, "secret_sauce")
 

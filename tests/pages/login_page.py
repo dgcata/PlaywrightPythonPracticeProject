@@ -1,6 +1,10 @@
 from playwright.sync_api import Page
 
 
+class InvalidUsernameException(Exception):
+    pass
+
+
 class SauceDemoLoginPage:
     def __init__(self, page: Page) -> None:
         self.page = page
