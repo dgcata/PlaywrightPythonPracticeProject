@@ -3,7 +3,7 @@
 As part of my employment requirements, this project showcases the skills
 I have acquired from our Playwright training course.
 
-This project focuses on testing a simple web application, namely [Sauce Demo](https://www.saucedemo.com/) by Swag Labs, with the following functionalities:
+This project focuses on testing a simple web application, namely [Sauce Demo](https://www.saucedemo.com/) by Sauce Labs, with the following functionalities:
 
 1. Login page with fields for username and password
 2. Product page with a list of products available
