@@ -1,7 +1,35 @@
-from playwright.sync_api import Page, expect
 import pytest
+from playwright.sync_api import expect
+from pages.products_page import SauceDemoProductsPage
 
-from pages.product_page import SauceDemoProductPage
+
+def test_successful_load(product_page: SauceDemoProductsPage):
+    expect(product_page.page).to_have_url(
+        "https://www.saucedemo.com/inventory.html"
+    )
+    expect(product_page.inventory_container).to_be_visible()
+    expect(product_page.sidebar_button).to_be_visible()
+    expect(product_page.shopping_cart).to_be_visible()
+
+
+def test_logout(product_page: SauceDemoProductsPage):
+    # assertions before logout
+    expect(product_page.login_container).not_to_be_visible()
+    expect(product_page.inventory_container).to_be_visible()
+    expect(product_page.sidebar_button).to_be_visible()
+    expect(product_page.shopping_cart).to_be_visible()
+
+    # logout
+    product_page.logout()
+
+    # assertions after logout
+    expect(product_page.page).to_have_url(
+        "https://www.saucedemo.com/"
+    )
+    expect(product_page.login_container).to_be_visible()
+    expect(product_page.inventory_container).not_to_be_visible()
+    expect(product_page.sidebar_button).not_to_be_visible()
+    expect(product_page.shopping_cart).not_to_be_visible()
 
 
 @pytest.mark.parametrize(
@@ -15,37 +43,10 @@ from pages.product_page import SauceDemoProductPage
         ("Sauce Labs Fleece Jacket", 5),
     ]
 )
-def test_link(page: Page, item_name: str, item_id: int):
-    product_page = SauceDemoProductPage(page)
-    product_page.navigate_to_inventory_standard()
+def test_item_link(
+    product_page: SauceDemoProductsPage, item_name: str, item_id: int
+) -> None:
     product_page.goto_item_page(item_name)
     expect(product_page.page).to_have_url(
         f"https://www.saucedemo.com/inventory-item.html?id={item_id}"
     )
-
-
-@pytest.mark.parametrize(
-    "item_name",
-    [
-        "Sauce Labs Bike Light",
-        "Sauce Labs Bolt T-Shirt",
-        "Sauce Labs Onesie",
-        "Test.allTheThings() T-Shirt (Red)",
-        "Sauce Labs Backpack",
-        "Sauce Labs Fleece Jacket",
-    ]
-)
-def test_add_to_cart(page: Page, item_name: str):
-    product_page = SauceDemoProductPage(page)
-    product_page.navigate_to_inventory_standard()
-    remove_button = (
-        product_page._SauceDemoProductPage__get_item_remove_from_cart_button(
-            item_name
-        )
-    )
-
-    expect(remove_button).not_to_be_visible()
-
-    product_page.add_item_to_cart(item_name)
-
-    expect(remove_button).to_be_visible()
