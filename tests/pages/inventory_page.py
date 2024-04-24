@@ -6,7 +6,7 @@ class InvalidItemName(Exception):
     pass
 
 
-class SauceDemoProductsPage(SauceDemoLoginPage):
+class SauceDemoInventoryPage(SauceDemoLoginPage):
     VALID_ITEMS = {
         0: "Sauce Labs Bike Light",
         1: "Sauce Labs Bolt T-Shirt",
@@ -32,16 +32,16 @@ class SauceDemoProductsPage(SauceDemoLoginPage):
             '[data-test="logout-sidebar-link"]'
         )
 
-    def navigate_to_inventory_as_user(self, username: str) -> None:
+    def goto_inventory_as_user(self, username: str) -> None:
         if username not in self.VALID_USERNAMES:
             raise InvalidUsernameException(
                 f"username '{username}' is an invalid username"
             )
-        self.navigate_to_login()
+        self.goto_login()
         self.login(username, self.PASSWORD)
 
-    def navigate_to_inventory_standard(self) -> None:
-        self.navigate_to_inventory_as_user("standard_user")
+    def goto_inventory_standard(self) -> None:
+        self.goto_inventory_as_user("standard_user")
 
     def logout(self) -> None:
         self.sidebar_button.click()

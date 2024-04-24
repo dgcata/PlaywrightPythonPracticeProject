@@ -1,8 +1,8 @@
 from playwright.sync_api import Page
-from pages.products_page import SauceDemoProductsPage
+from pages.inventory_page import SauceDemoInventoryPage
 
 
-class SauceDemoCartPage(SauceDemoProductsPage):
+class SauceDemoCartPage(SauceDemoInventoryPage):
     def __init__(self, page: Page) -> None:
         super().__init__(page)
 

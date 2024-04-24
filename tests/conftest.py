@@ -1,30 +1,41 @@
 import pytest
 from playwright.sync_api import Page
 from pages.login_page import SauceDemoLoginPage
-from pages.products_page import SauceDemoProductsPage
+from pages.inventory_page import SauceDemoInventoryPage
 from pages.cart_page import SauceDemoCartPage
+from pages.item_page import SauceDemoItemPage
 
 
 @pytest.fixture
 def login_page(page: Page) -> SauceDemoLoginPage:
     login_page = SauceDemoLoginPage(page)
-    login_page.navigate_to_login()
+    login_page.goto_login()
     return login_page
 
 
 @pytest.fixture
-def product_page(page: Page) -> SauceDemoProductsPage:
-    product_page = SauceDemoProductsPage(page)
-    product_page.navigate_to_inventory_standard()
-    return product_page
+def inventory_page(page: Page) -> SauceDemoInventoryPage:
+    inventory_page = SauceDemoInventoryPage(page)
+    inventory_page.goto_inventory_standard()
+    return inventory_page
 
 
 @pytest.fixture
-def cart_page(
-    request: pytest.FixtureRequest
-) -> SauceDemoCartPage:
-    product_page: SauceDemoProductsPage = (
-        request.getfixturevalue("product_page")
-    )
-    cart_page = SauceDemoCartPage(product_page.page)
+def item_page(page: Page) -> SauceDemoItemPage:
+    item_page = SauceDemoItemPage(page)
+    return item_page
+
+
+@pytest.fixture
+def cart_page(page: Page) -> SauceDemoCartPage:
+    cart_page = SauceDemoCartPage(page)
     return cart_page
+
+
+@pytest.fixture
+def inventory_page__buy_all(
+    inventory_page: SauceDemoInventoryPage
+) -> SauceDemoInventoryPage:
+    for item in inventory_page.VALID_ITEMS.values():
+        inventory_page.add_item_to_cart(item)
+    return inventory_page
