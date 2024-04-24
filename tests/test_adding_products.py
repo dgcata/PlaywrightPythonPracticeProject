@@ -58,7 +58,7 @@ def test_item_link(
     "item_id",
     [0, 1, 2, 3, 4],
 )
-def test_adding_products_to_cart_and_checkout(
+def test_adding_products_to_cart(
     product_page: SauceDemoProductsPage,
     cart_page: SauceDemoCartPage,
     item_id: int,
