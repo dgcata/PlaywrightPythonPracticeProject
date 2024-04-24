@@ -19,6 +19,3 @@ class SauceDemoCartPage(SauceDemoProductsPage):
 
     def continue_shopping(self) -> None:
         self.continue_shopping_button.click()
-
-    def remove_item(self, item_name: str) -> None:
-        self.remove_item_from_cart(item_name)
