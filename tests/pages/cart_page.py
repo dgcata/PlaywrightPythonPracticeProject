@@ -5,9 +5,20 @@ from pages.products_page import SauceDemoProductsPage
 class SauceDemoCartPage(SauceDemoProductsPage):
     def __init__(self, page: Page) -> None:
         super().__init__(page)
-        self.continue_shopping = page.get_by_role('button').filter(
+
+        self.continue_shopping_button = page.get_by_role('button').filter(
             has_text="Continue Shopping"
         )
-        self.checkout = page.get_by_role('button').filter(
+        self.checkout_button = page.get_by_role('button').filter(
             has_text="Checkout"
         )
+        self.cart_list = self.page.locator('[data-test="cart-list"]')
+
+    def checkout(self) -> None:
+        self.checkout_button.click()
+
+    def continue_shopping(self) -> None:
+        self.continue_shopping_button.click()
+
+    def remove_item(self, item_name: str) -> None:
+        self.remove_item_from_cart(item_name)
