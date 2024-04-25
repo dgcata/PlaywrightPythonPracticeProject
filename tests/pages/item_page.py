@@ -22,3 +22,6 @@ class SauceDemoItemPage(SauceDemoInventoryPage):
 
     def remove_item_from_cart(self) -> None:  # type: ignore[override]
         self.remove_button.click()
+
+    def goto_item_page(self, item_id: int) -> None:
+        self.page.goto(f"https://www.saucedemo.com/inventory-item.html?id={item_id}")

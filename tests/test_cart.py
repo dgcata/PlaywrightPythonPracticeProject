@@ -23,7 +23,7 @@ def test_can_logout_from_cart_page(cart_page: SauceDemoCartPage) -> None:
 
 def test_can_checkout_from_cart_page(cart_page: SauceDemoCartPage) -> None:
     cart_page.goto_inventory_standard()
-    cart_page.add_item_to_cart("Sauce Labs Backpack")
+    cart_page.add_item_to_cart(0)
     cart_page.goto_cart()
     cart_page.checkout()
 
@@ -53,28 +53,20 @@ def test_can_go_back_to_inventory(cart_page: SauceDemoCartPage) -> None:
     expect(cart_page.page).to_have_url("https://www.saucedemo.com/inventory.html")
 
 
-@pytest.mark.parametrize(
-    "item_name",
-    [
-        "Sauce Labs Bike Light",
-        "Sauce Labs Bolt T-Shirt",
-        "Sauce Labs Onesie",
-        "Test.allTheThings() T-Shirt (Red)",
-        "Sauce Labs Backpack",
-        "Sauce Labs Fleece Jacket",
-    ],
-)
+@pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4, 5])
 def test_can_remove_an_item_from_cart_page(
     cart_page: SauceDemoCartPage,
-    item_name: str,
+    item_id: int,
 ) -> None:
+    item_name = cart_page.VALID_ITEMS[item_id]
+
     cart_page.goto_inventory_standard()
-    cart_page.add_item_to_cart(item_name)
+    cart_page.add_item_to_cart(item_id)
     cart_page.goto_cart()
 
     # assertion before removing item
     expect(cart_page.cart_list).to_contain_text(item_name)
     # removing item
-    cart_page.remove_item_from_cart(item_name)
+    cart_page.remove_item_from_cart(item_id)
     # assertion after removing item
     expect(cart_page.cart_list).not_to_contain_text(item_name)

@@ -51,7 +51,7 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
     def remove_item_from_cart(self, item_id: int) -> None:
         self.__get_remove_from_cart_button(item_id).click()
 
-    def __get_item_link(self, item_id: str) -> Locator:
+    def __get_item_link(self, item_id: int) -> Locator:
         item_name = self.__get_item_name(item_id)
         item_link = self.page.get_by_role("link").filter(has_text=item_name)
         return item_link

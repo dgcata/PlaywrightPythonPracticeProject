@@ -36,8 +36,8 @@ def cart_page(page: Page) -> SauceDemoCartPage:
 def inventory_page__buy_all(
     inventory_page: SauceDemoInventoryPage,
 ) -> SauceDemoInventoryPage:
-    for item in inventory_page.VALID_ITEMS.values():
-        inventory_page.add_item_to_cart(item)
+    for item_id in inventory_page.VALID_ITEMS:
+        inventory_page.add_item_to_cart(item_id)
     return inventory_page
 
 
@@ -45,6 +45,6 @@ def inventory_page__buy_all(
 def fleece_jacket_item_page(
     inventory_page: SauceDemoInventoryPage,
 ) -> SauceDemoItemPage:
-    inventory_page.goto_item_page("Sauce Labs Fleece Jacket")
+    inventory_page.goto_item_page(5)
     item_page = SauceDemoItemPage(inventory_page.page)
     return item_page
