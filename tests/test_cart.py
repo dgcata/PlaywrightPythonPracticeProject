@@ -19,6 +19,8 @@ def test_can_logout_from_cart_page(cart_page: SauceDemoCartPage) -> None:
     cart_page.logout()
 
     expect(cart_page.page).to_have_url("https://www.saucedemo.com/")
+
+
 def test_can_checkout_from_cart_page(cart_page: SauceDemoCartPage) -> None:
     cart_page.goto_inventory_standard()
     cart_page.add_item_to_cart("Sauce Labs Backpack")
