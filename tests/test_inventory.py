@@ -3,7 +3,7 @@ from playwright.sync_api import expect
 from pages.inventory_page import SauceDemoInventoryPage
 
 
-def test_successful_load(inventory_page: SauceDemoInventoryPage):
+def test_successful_load(inventory_page: SauceDemoInventoryPage) -> None:
     expect(inventory_page.page).to_have_url(
         "https://www.saucedemo.com/inventory.html"
     )
@@ -13,7 +13,7 @@ def test_successful_load(inventory_page: SauceDemoInventoryPage):
     expect(inventory_page.logout_button).not_to_be_visible()
 
 
-def test_logout(inventory_page: SauceDemoInventoryPage):
+def test_logout(inventory_page: SauceDemoInventoryPage) -> None:
     # assertions before logout
     expect(inventory_page.login_container).not_to_be_visible()
     expect(inventory_page.inventory_container).to_be_visible()

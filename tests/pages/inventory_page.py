@@ -1,4 +1,4 @@
-from playwright.sync_api import Page, ElementHandle
+from playwright.sync_api import Page, Locator
 from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 
 
@@ -59,14 +59,14 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
     def remove_item_from_cart(self, item_name: str) -> None:
         self.__get_remove_from_cart_button(item_name).click()
 
-    def __get_item_link(self, item_name: str) -> ElementHandle:
+    def __get_item_link(self, item_name: str) -> Locator:
         self.__check_item_name(item_name)
         item_link = self.page.get_by_role("link").filter(
             has_text=item_name
         )
         return item_link
 
-    def __get_add_to_cart_button(self, item_name: str) -> ElementHandle:
+    def __get_add_to_cart_button(self, item_name: str) -> Locator:
         self.__check_item_name(item_name)
         item_name = item_name.lower().replace(" ", "-")
         add_to_card_button = self.page.locator(
@@ -74,7 +74,7 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
         )
         return add_to_card_button
 
-    def __get_remove_from_cart_button(self, item_name: str) -> ElementHandle:
+    def __get_remove_from_cart_button(self, item_name: str) -> Locator:
         self.__check_item_name(item_name)
         item_name = item_name.lower().replace(" ", "-")
         remove_from_card_button = self.page.locator(

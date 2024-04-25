@@ -21,8 +21,8 @@ class SauceDemoItemPage(SauceDemoInventoryPage):
     def go_back_to_inventory(self) -> None:
         self.back_to_products_button.click()
 
-    def add_item_to_cart(self) -> None:
+    def add_item_to_cart(self) -> None:  # type: ignore[override]
         self.add_to_cart_button.click()
 
-    def remove_item_from_cart(self) -> None:
+    def remove_item_from_cart(self) -> None:  # type: ignore[override]
         self.remove_button.click()
