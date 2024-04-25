@@ -1,20 +1,16 @@
-from playwright.sync_api import Page
 from pages.inventory_page import SauceDemoInventoryPage
+from playwright.sync_api import Page
 
 
 class SauceDemoItemPage(SauceDemoInventoryPage):
     def __init__(self, page: Page) -> None:
         super().__init__(page)
 
-        self.back_to_products_button = page.locator(
-            '[data-test="back-to-products"]'
-        )
+        self.back_to_products_button = page.locator('[data-test="back-to-products"]')
         self.item_name = page.locator('[data-test="inventory-item-name"]')
         self.item_price = page.locator('[data-test="inventory-item-price"]')
         self.item_image = page.locator('[class="inventory_details_img"]')
-        self.item_description = page.locator(
-            '[data-test="inventory-item-desc"]'
-        )
+        self.item_description = page.locator('[data-test="inventory-item-desc"]')
         self.add_to_cart_button = page.locator('[data-test="add-to-cart"]')
         self.remove_button = page.locator('[data-test="remove"]')
 

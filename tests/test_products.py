@@ -17,10 +17,10 @@ Checkout interactions is still in development
 """
 
 import pytest
-from playwright.sync_api import expect
 from pages.cart_page import SauceDemoCartPage
 from pages.inventory_page import SauceDemoInventoryPage
 from pages.item_page import SauceDemoItemPage
+from playwright.sync_api import expect
 
 
 @pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4])
@@ -31,23 +31,13 @@ def test_adding_products_from_inventory_page(
 ) -> None:
     other_item_name = inventory_page.VALID_ITEMS[item_id]
 
-    inventory_page.add_item_to_cart(
-        "Sauce Labs Fleece Jacket"
-    )
-    inventory_page.add_item_to_cart(
-        other_item_name
-    )
+    inventory_page.add_item_to_cart("Sauce Labs Fleece Jacket")
+    inventory_page.add_item_to_cart(other_item_name)
     inventory_page.goto_cart()
 
-    expect(cart_page.page).to_have_url(
-        "https://www.saucedemo.com/cart.html"
-    )
-    expect(cart_page.cart_list).to_contain_text(
-        "Sauce Labs Fleece Jacket"
-    )
-    expect(cart_page.cart_list).to_contain_text(
-        other_item_name
-    )
+    expect(cart_page.page).to_have_url("https://www.saucedemo.com/cart.html")
+    expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
+    expect(cart_page.cart_list).to_contain_text(other_item_name)
 
 
 @pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4])
@@ -59,27 +49,17 @@ def test_adding_products_from_item_page(
 ) -> None:
     other_item_name = inventory_page.VALID_ITEMS[item_id]
 
-    inventory_page.goto_item_page(
-        "Sauce Labs Fleece Jacket"
-    )
+    inventory_page.goto_item_page("Sauce Labs Fleece Jacket")
     item_page.add_item_to_cart()
     item_page.go_back_to_inventory()
 
-    inventory_page.goto_item_page(
-        other_item_name
-    )
+    inventory_page.goto_item_page(other_item_name)
     item_page.add_item_to_cart()
     item_page.goto_cart()
 
-    expect(cart_page.page).to_have_url(
-        "https://www.saucedemo.com/cart.html"
-    )
-    expect(cart_page.cart_list).to_contain_text(
-        "Sauce Labs Fleece Jacket"
-    )
-    expect(cart_page.cart_list).to_contain_text(
-        other_item_name
-    )
+    expect(cart_page.page).to_have_url("https://www.saucedemo.com/cart.html")
+    expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
+    expect(cart_page.cart_list).to_contain_text(other_item_name)
 
 
 @pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4, 5])

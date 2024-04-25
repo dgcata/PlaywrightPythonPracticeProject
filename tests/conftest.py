@@ -1,9 +1,9 @@
 import pytest
-from playwright.sync_api import Page
-from pages.login_page import SauceDemoLoginPage
-from pages.inventory_page import SauceDemoInventoryPage
 from pages.cart_page import SauceDemoCartPage
+from pages.inventory_page import SauceDemoInventoryPage
 from pages.item_page import SauceDemoItemPage
+from pages.login_page import SauceDemoLoginPage
+from playwright.sync_api import Page
 
 
 @pytest.fixture
@@ -34,7 +34,7 @@ def cart_page(page: Page) -> SauceDemoCartPage:
 
 @pytest.fixture
 def inventory_page__buy_all(
-    inventory_page: SauceDemoInventoryPage
+    inventory_page: SauceDemoInventoryPage,
 ) -> SauceDemoInventoryPage:
     for item in inventory_page.VALID_ITEMS.values():
         inventory_page.add_item_to_cart(item)
@@ -43,7 +43,7 @@ def inventory_page__buy_all(
 
 @pytest.fixture
 def fleece_jacket_item_page(
-    inventory_page: SauceDemoInventoryPage
+    inventory_page: SauceDemoInventoryPage,
 ) -> SauceDemoItemPage:
     inventory_page.goto_item_page("Sauce Labs Fleece Jacket")
     item_page = SauceDemoItemPage(inventory_page.page)

@@ -1,6 +1,6 @@
 import pytest
-from playwright.sync_api import expect
 from pages.item_page import SauceDemoItemPage
+from playwright.sync_api import expect
 
 
 @pytest.mark.parametrize(
@@ -24,9 +24,7 @@ def test_successful_load(
         f"https://www.saucedemo.com/inventory-item.html?id={item_id}"
     )
 
-    expect(item_page.item_name).to_contain_text(
-        item_name
-    )
+    expect(item_page.item_name).to_contain_text(item_name)
     expect(item_page.item_description).to_be_visible()
     expect(item_page.item_price).to_be_visible()
     expect(item_page.item_image).to_be_visible()
@@ -36,7 +34,7 @@ def test_successful_load(
 
 
 def test_can_add_item_from_item_page(
-    fleece_jacket_item_page: SauceDemoItemPage
+    fleece_jacket_item_page: SauceDemoItemPage,
 ) -> None:
     # assertion before adding to cart
     expect(fleece_jacket_item_page.add_to_cart_button).to_be_visible()
@@ -51,7 +49,7 @@ def test_can_add_item_from_item_page(
 
 
 def test_can_remove_item_from_item_page(
-    fleece_jacket_item_page: SauceDemoItemPage
+    fleece_jacket_item_page: SauceDemoItemPage,
 ) -> None:
     fleece_jacket_item_page.add_item_to_cart()
     # assertion before removing from cart
@@ -67,7 +65,7 @@ def test_can_remove_item_from_item_page(
 
 
 def test_can_go_back_to_inventory_from_item_page(
-    fleece_jacket_item_page: SauceDemoItemPage
+    fleece_jacket_item_page: SauceDemoItemPage,
 ) -> None:
     fleece_jacket_item_page.go_back_to_inventory()
     expect(fleece_jacket_item_page.page).to_have_url(
@@ -76,7 +74,7 @@ def test_can_go_back_to_inventory_from_item_page(
 
 
 def test_can_goto_cart_from_item_page(
-    fleece_jacket_item_page: SauceDemoItemPage
+    fleece_jacket_item_page: SauceDemoItemPage,
 ) -> None:
     fleece_jacket_item_page.goto_cart()
     expect(fleece_jacket_item_page.page).to_have_url(
@@ -84,10 +82,6 @@ def test_can_goto_cart_from_item_page(
     )
 
 
-def test_can_logout_from_item_page(
-    fleece_jacket_item_page: SauceDemoItemPage
-) -> None:
+def test_can_logout_from_item_page(fleece_jacket_item_page: SauceDemoItemPage) -> None:
     fleece_jacket_item_page.logout()
-    expect(fleece_jacket_item_page.page).to_have_url(
-        "https://www.saucedemo.com/"
-    )
+    expect(fleece_jacket_item_page.page).to_have_url("https://www.saucedemo.com/")

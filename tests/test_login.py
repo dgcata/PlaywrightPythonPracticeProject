@@ -1,6 +1,6 @@
 import pytest
-from playwright.sync_api import expect
 from pages.login_page import SauceDemoLoginPage
+from playwright.sync_api import expect
 
 
 def test_successful_load(login_page: SauceDemoLoginPage) -> None:
@@ -19,14 +19,10 @@ def test_successful_load(login_page: SauceDemoLoginPage) -> None:
         "visual_user",
     ],
 )
-def test_successful_login(
-    login_page: SauceDemoLoginPage, username: str
-) -> None:
+def test_successful_login(login_page: SauceDemoLoginPage, username: str) -> None:
     login_page.login(username, "secret_sauce")
 
-    expect(login_page.page).to_have_url(
-        "https://www.saucedemo.com/inventory.html"
-    )
+    expect(login_page.page).to_have_url("https://www.saucedemo.com/inventory.html")
 
 
 @pytest.mark.parametrize(
