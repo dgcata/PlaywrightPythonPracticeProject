@@ -1,20 +1,8 @@
-from decimal import Decimal
-
 from pages.inventory_page import SauceDemoInventoryPage
 from playwright.sync_api import Page
 
 
 class SauceDemoCartPage(SauceDemoInventoryPage):
-    ITEM_PRICES = {
-        0: Decimal("9.99"),
-        1: Decimal("15.99"),
-        2: Decimal("7.99"),
-        3: Decimal("15.99"),
-        4: Decimal("29.99"),
-        5: Decimal("49.99"),
-    }
-    TAX_RATE = Decimal("0.08")
-
     def __init__(self, page: Page) -> None:
         super().__init__(page)
 

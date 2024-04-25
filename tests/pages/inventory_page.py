@@ -7,15 +7,6 @@ class ItemDoesNotExistException(Exception):
 
 
 class SauceDemoInventoryPage(SauceDemoLoginPage):
-    VALID_ITEMS = {
-        0: "Sauce Labs Bike Light",
-        1: "Sauce Labs Bolt T-Shirt",
-        2: "Sauce Labs Onesie",
-        3: "Test.allTheThings() T-Shirt (Red)",
-        4: "Sauce Labs Backpack",
-        5: "Sauce Labs Fleece Jacket",
-    }
-
     def __init__(self, page: Page) -> None:
         super().__init__(page)
 
@@ -74,7 +65,7 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
 
     def __get_item_name(self, item_id: int) -> str:
         try:
-            item_name = self.VALID_ITEMS[item_id]
+            item_name = self.VALID_ITEMS[item_id].item_name
             return item_name
         except KeyError:
             raise ItemDoesNotExistException(f"item with id '{item_id}' not found")

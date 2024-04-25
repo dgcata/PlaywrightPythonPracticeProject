@@ -29,7 +29,7 @@ def test_adding_products_from_inventory_page(
     cart_page: SauceDemoCartPage,
     other_item_id: int,
 ) -> None:
-    other_item_name = inventory_page.VALID_ITEMS[other_item_id]
+    other_item_name = inventory_page.VALID_ITEMS[other_item_id].item_name
 
     inventory_page.add_item_to_cart(5)
     inventory_page.add_item_to_cart(other_item_id)
@@ -47,7 +47,7 @@ def test_adding_products_from_item_page(
     cart_page: SauceDemoCartPage,
     other_item_id: int,
 ) -> None:
-    other_item_name = inventory_page.VALID_ITEMS[other_item_id]
+    other_item_name = inventory_page.VALID_ITEMS[other_item_id].item_name
 
     inventory_page.goto_item_page(5)
     item_page.add_item_to_cart()
@@ -68,7 +68,9 @@ def test_removing_product_from_inventory_page(
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
+    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
+        item_to_remove_id
+    ].item_name
 
     # removes item first in the inventory
     # page before going to the cart page
@@ -84,7 +86,9 @@ def test_removing_product_from_cart_page(
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
+    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
+        item_to_remove_id
+    ].item_name
 
     # goes to the cart page first before
     # removing the item in the cart page
@@ -104,7 +108,9 @@ def test_removing_product_from_item_page(
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
+    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
+        item_to_remove_id
+    ].item_name
 
     # goes to the specific item page first
     # then removes the item there before

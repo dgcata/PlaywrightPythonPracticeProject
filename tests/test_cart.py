@@ -58,7 +58,7 @@ def test_can_remove_an_item_from_cart_page(
     cart_page: SauceDemoCartPage,
     item_id: int,
 ) -> None:
-    item_name = cart_page.VALID_ITEMS[item_id]
+    item_name = cart_page.VALID_ITEMS[item_id].item_name
 
     cart_page.goto_inventory_standard()
     cart_page.add_item_to_cart(item_id)
