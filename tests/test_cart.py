@@ -1,6 +1,6 @@
-from playwright.sync_api import expect
 import pytest
 from pages.cart_page import SauceDemoCartPage
+from playwright.sync_api import expect
 
 
 def test_successful_load(cart_page: SauceDemoCartPage) -> None:
