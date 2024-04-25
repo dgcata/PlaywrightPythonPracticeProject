@@ -67,7 +67,7 @@ def test_can_go_back_to_inventory(cart_page: SauceDemoCartPage) -> None:
 def test_can_remove_an_item_from_cart_page(
     cart_page: SauceDemoCartPage,
     item_name: str,
-):
+) -> None:
     cart_page.goto_inventory_standard()
     cart_page.add_item_to_cart(item_name)
     cart_page.goto_cart()
