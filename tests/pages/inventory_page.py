@@ -2,7 +2,7 @@ from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 from playwright.sync_api import Locator, Page
 
 
-class InvalidItemName(Exception):
+class ItemDoesNotExistException(Exception):
     pass
 
 
@@ -42,32 +42,39 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
     def goto_cart(self) -> None:
         self.shopping_cart.click()
 
-    def goto_item_page(self, item_name: str) -> None:
-        self.__get_item_link(item_name).click()
+    def goto_item_page(self, item_id: int) -> None:
+        self.__get_item_link(item_id).click()
 
-    def add_item_to_cart(self, item_name: str) -> None:
-        self.__get_add_to_cart_button(item_name).click()
+    def add_item_to_cart(self, item_id: int) -> None:
+        self.__get_add_to_cart_button(item_id).click()
 
-    def remove_item_from_cart(self, item_name: str) -> None:
-        self.__get_remove_from_cart_button(item_name).click()
+    def remove_item_from_cart(self, item_id: int) -> None:
+        self.__get_remove_from_cart_button(item_id).click()
 
-    def __get_item_link(self, item_name: str) -> Locator:
-        self.__check_item_name(item_name)
+    def __get_item_link(self, item_id: str) -> Locator:
+        item_name = self.__get_item_name(item_id)
         item_link = self.page.get_by_role("link").filter(has_text=item_name)
         return item_link
 
-    def __get_add_to_cart_button(self, item_name: str) -> Locator:
-        self.__check_item_name(item_name)
-        item_name = item_name.lower().replace(" ", "-")
-        add_to_card_button = self.page.locator(f'[data-test="add-to-cart-{item_name}"]')
+    def __get_add_to_cart_button(self, item_id: int) -> Locator:
+        item_name = self.__get_item_name(item_id)
+        formatted_item_name = item_name.lower().replace(" ", "-")
+        add_to_card_button = self.page.locator(
+            f'[data-test="add-to-cart-{formatted_item_name}"]'
+        )
         return add_to_card_button
 
-    def __get_remove_from_cart_button(self, item_name: str) -> Locator:
-        self.__check_item_name(item_name)
-        item_name = item_name.lower().replace(" ", "-")
-        remove_from_card_button = self.page.locator(f'[data-test="remove-{item_name}"]')
+    def __get_remove_from_cart_button(self, item_id: int) -> Locator:
+        item_name = self.__get_item_name(item_id)
+        formatted_item_name = item_name.lower().replace(" ", "-")
+        remove_from_card_button = self.page.locator(
+            f'[data-test="remove-{formatted_item_name}"]'
+        )
         return remove_from_card_button
 
-    def __check_item_name(self, item_name: str) -> None:
-        if item_name not in self.VALID_ITEMS.values():
-            raise InvalidItemName(f"item '{item_name}' is not a valid item")
+    def __get_item_name(self, item_id: int) -> str:
+        try:
+            item_name = self.VALID_ITEMS[item_id]
+            return item_name
+        except KeyError:
+            raise ItemDoesNotExistException(f"item with id '{item_id}' not found")
