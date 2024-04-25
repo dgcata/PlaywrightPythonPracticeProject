@@ -39,3 +39,12 @@ def inventory_page__buy_all(
     for item in inventory_page.VALID_ITEMS.values():
         inventory_page.add_item_to_cart(item)
     return inventory_page
+
+
+@pytest.fixture
+def fleece_jacket_item_page(
+    inventory_page: SauceDemoInventoryPage
+) -> SauceDemoItemPage:
+    inventory_page.goto_item_page("Sauce Labs Fleece Jacket")
+    item_page = SauceDemoItemPage(inventory_page.page)
+    return item_page

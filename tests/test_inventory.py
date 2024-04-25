@@ -42,7 +42,7 @@ def test_logout(inventory_page: SauceDemoInventoryPage):
         ("Test.allTheThings() T-Shirt (Red)", 3),
         ("Sauce Labs Backpack", 4),
         ("Sauce Labs Fleece Jacket", 5),
-    ]
+    ],
 )
 def test_item_link(
     inventory_page: SauceDemoInventoryPage, item_name: str, item_id: int

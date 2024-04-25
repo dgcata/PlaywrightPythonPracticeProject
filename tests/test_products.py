@@ -63,7 +63,7 @@ def test_adding_products_from_item_page(
         "Sauce Labs Fleece Jacket"
     )
     item_page.add_item_to_cart()
-    item_page.goto_inventory()
+    item_page.go_back_to_inventory()
 
     inventory_page.goto_item_page(
         other_item_name
