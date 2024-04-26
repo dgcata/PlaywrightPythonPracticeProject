@@ -1,22 +1,16 @@
 from playwright.sync_api import Page
 
+from pages.base_page import SauceDemoBasePage
+
 
 class InvalidUsernameException(Exception):
     pass
 
 
-class SauceDemoLoginPage:
-    VALID_USERNAMES = [
-        "standard_user",
-        "problem_user",
-        "performance_glitch_user",
-        "error_user",
-        "visual_user",
-    ]
-    PASSWORD = "secret_sauce"
-
+class SauceDemoLoginPage(SauceDemoBasePage):
     def __init__(self, page: Page) -> None:
-        self.page = page
+        super().__init__(page)
+
         self.username_field = page.locator("#user-name")
         self.password_field = page.locator("#password")
         self.login_button = page.locator("#login-button")

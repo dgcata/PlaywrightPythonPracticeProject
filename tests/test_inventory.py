@@ -1,6 +1,7 @@
 import pytest
-from pages.inventory_page import SauceDemoInventoryPage
 from playwright.sync_api import expect
+
+from pages.inventory_page import SauceDemoInventoryPage
 
 
 def test_successful_load(inventory_page: SauceDemoInventoryPage) -> None:
@@ -30,23 +31,26 @@ def test_logout(inventory_page: SauceDemoInventoryPage) -> None:
 
 
 @pytest.mark.parametrize(
-    "item_name, item_id",
+    "item_id, expected_item_name",
     [
-        ("Sauce Labs Bike Light", 0),
-        ("Sauce Labs Bolt T-Shirt", 1),
-        ("Sauce Labs Onesie", 2),
-        ("Test.allTheThings() T-Shirt (Red)", 3),
-        ("Sauce Labs Backpack", 4),
-        ("Sauce Labs Fleece Jacket", 5),
+        (0, "Sauce Labs Bike Light"),
+        (1, "Sauce Labs Bolt T-Shirt"),
+        (2, "Sauce Labs Onesie"),
+        (3, "Test.allTheThings() T-Shirt (Red)"),
+        (4, "Sauce Labs Backpack"),
+        (5, "Sauce Labs Fleece Jacket"),
     ],
 )
 def test_item_link(
-    inventory_page: SauceDemoInventoryPage, item_name: str, item_id: int
+    inventory_page: SauceDemoInventoryPage, item_id: int, expected_item_name: str
 ) -> None:
-    inventory_page.goto_item_page(item_name)
+    inventory_page.goto_item_page(item_id)
     expect(inventory_page.page).to_have_url(
         f"https://www.saucedemo.com/inventory-item.html?id={item_id}"
     )
+
+    item_name = inventory_page.page.locator('[data-test="inventory-item-name"]')
+    expect(item_name).to_contain_text(expected_item_name)
 
 
 def test_goto_cart(inventory_page: SauceDemoInventoryPage) -> None:
