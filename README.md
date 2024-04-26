@@ -41,7 +41,7 @@ To run this project:
 2. Install the playwright dependencies
 
     ```bash
-    playwright install
+    playwright install --with-deps
     ```
 
 3. Then you may run pytest with this simple command
@@ -54,4 +54,30 @@ To run this project:
 
     ```bash
     pytest --headed --browser chromium --browser firefox --browser webkit
+    ```
+
+5. To run in debug mode, run the following code:
+
+    ```bash
+    pytest --headed --debug
+    ```
+
+    You may or may not specify browsers
+
+6. To run a specific test file, run the following code:
+
+    ```bash
+    pytest -k test_filename
+    ```
+
+    To run a specific test from a test file:
+
+    ```bash
+    pytest -k test_name
+    ```
+
+    The same flags from steps 4 and 5 can still work. For example:
+
+    ```bash
+    pytest -k test_sample --browser chromium --headed --debug
     ```
