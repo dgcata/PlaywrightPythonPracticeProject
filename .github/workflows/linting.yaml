@@ -27,6 +27,6 @@ jobs:
 
     - name: Run Linting
       run: |
-        python -m isort tests pages --check
-        python -m black tests pages --check
-        python -m flake8 tests pages
+        python -m isort . --check
+        python -m black . --check
+        python -m flake8 .
