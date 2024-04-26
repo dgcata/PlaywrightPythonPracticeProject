@@ -1,5 +1,6 @@
-from pages.cart_page import SauceDemoCartPage
 from playwright.sync_api import Page
+
+from pages.cart_page import SauceDemoCartPage
 
 
 class SauceDemoCheckoutPages(SauceDemoCartPage):
