@@ -1,5 +1,6 @@
-from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 from playwright.sync_api import Locator, Page
+
+from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 
 
 class ItemDoesNotExistException(Exception):

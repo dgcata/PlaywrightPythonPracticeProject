@@ -17,10 +17,11 @@ Checkout interactions is still in development
 """
 
 import pytest
+from playwright.sync_api import expect
+
 from pages.cart_page import SauceDemoCartPage
 from pages.inventory_page import SauceDemoInventoryPage
 from pages.item_page import SauceDemoItemPage
-from playwright.sync_api import expect
 
 
 @pytest.mark.parametrize("other_item_id", [0, 1, 2, 3, 4])

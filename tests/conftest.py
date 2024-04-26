@@ -1,9 +1,10 @@
 import pytest
+from playwright.sync_api import Page
+
 from pages.cart_page import SauceDemoCartPage
 from pages.inventory_page import SauceDemoInventoryPage
 from pages.item_page import SauceDemoItemPage
 from pages.login_page import SauceDemoLoginPage
-from playwright.sync_api import Page
 
 
 @pytest.fixture

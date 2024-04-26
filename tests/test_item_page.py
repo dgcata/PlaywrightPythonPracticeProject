@@ -1,6 +1,7 @@
 import pytest
-from pages.item_page import SauceDemoItemPage
 from playwright.sync_api import expect
+
+from pages.item_page import SauceDemoItemPage
 
 
 @pytest.mark.parametrize(
