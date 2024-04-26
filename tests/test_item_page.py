@@ -1,6 +1,7 @@
 import pytest
-from pages.item_page import SauceDemoItemPage
 from playwright.sync_api import expect
+
+from pages.item_page import SauceDemoItemPage
 
 
 @pytest.mark.parametrize(
@@ -18,7 +19,7 @@ def test_successful_load(
     item_page: SauceDemoItemPage, item_id: int, item_name: str
 ) -> None:
     item_page.goto_inventory_standard()
-    item_page.goto_item_page(item_name)
+    item_page.goto_item_page(item_id)
 
     expect(item_page.page).to_have_url(
         f"https://www.saucedemo.com/inventory-item.html?id={item_id}"

@@ -1,6 +1,7 @@
 import pytest
-from pages.login_page import SauceDemoLoginPage
 from playwright.sync_api import expect
+
+from pages.login_page import SauceDemoLoginPage
 
 
 def test_successful_load(login_page: SauceDemoLoginPage) -> None:
