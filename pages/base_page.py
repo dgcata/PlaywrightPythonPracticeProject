@@ -1,3 +1,4 @@
+import sys
 from dataclasses import dataclass
 from decimal import Decimal
 
@@ -61,6 +62,13 @@ class SauceDemoBasePage:
 
     def __init__(self, page: Page) -> None:
         self.page = page
+
+        # emulate `npx playwright test --debug`
+        # from JavaScript, to use run the following
+        # command: `python -m pytest --headed --debug`
+        # NOTE: flag '--headed' is neccessary
+        if "--debug" in sys.argv:
+            self.pause()
 
     def pause(self) -> None:
         self.page.pause()
