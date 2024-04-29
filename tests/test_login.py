@@ -6,7 +6,7 @@ from pages.login_page import SauceDemoLoginPage
 
 def test_successful_load(login_page: SauceDemoLoginPage) -> None:
     expect(login_page.login_container).to_be_visible()
-    expect(login_page.page).to_have_url("https://www.saucedemo.com/")
+    expect(login_page.page).to_have_url(login_page.MAIN_URL)
     expect(login_page.page).to_have_title("Swag Labs")
 
 
@@ -23,7 +23,7 @@ def test_successful_load(login_page: SauceDemoLoginPage) -> None:
 def test_successful_login(login_page: SauceDemoLoginPage, username: str) -> None:
     login_page.login(username, "secret_sauce")
 
-    expect(login_page.page).to_have_url("https://www.saucedemo.com/inventory.html")
+    expect(login_page.page).to_have_url(login_page.URLS["inventory"])
 
 
 @pytest.mark.parametrize(

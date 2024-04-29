@@ -36,7 +36,7 @@ def test_adding_products_from_inventory_page(
     inventory_page.add_item_to_cart(other_item_id)
     inventory_page.goto_cart()
 
-    expect(cart_page.page).to_have_url("https://www.saucedemo.com/cart.html")
+    expect(cart_page.page).to_have_url(inventory_page.URLS["cart"])
     expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
     expect(cart_page.cart_list).to_contain_text(other_item_name)
 
@@ -58,7 +58,7 @@ def test_adding_products_from_item_page(
     item_page.add_item_to_cart()
     item_page.goto_cart()
 
-    expect(cart_page.page).to_have_url("https://www.saucedemo.com/cart.html")
+    expect(cart_page.page).to_have_url(inventory_page.URLS["cart"])
     expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
     expect(cart_page.cart_list).to_contain_text(other_item_name)
 

@@ -13,6 +13,17 @@ class SauceDemoItem:
 
 
 class SauceDemoBasePage:
+    # TODO: should all of these remain as class attributes
+    # or should it be implemented as read-only object attributes
+    MAIN_URL = "https://www.saucedemo.com/"
+    URLS = {
+        "inventory": MAIN_URL + "inventory.html",
+        "item": MAIN_URL + "inventory-item.html?id={}",
+        "cart": MAIN_URL + "cart.html",
+        "checkout_one": MAIN_URL + "checkout-step-one.html",
+        "checkout_two": MAIN_URL + "checkout-step-two.html",
+        "checkout_done": MAIN_URL + "checkout-complete.html",
+    }
     VALID_USERNAMES = [
         "standard_user",
         "problem_user",
