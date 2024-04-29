@@ -24,3 +24,20 @@ class SauceDemoCheckoutPages(SauceDemoCartPage):
             '[data-test="checkout-complete-container"]'
         )
         self.back_to_home_button = page.locator('[data-test="back-to-products"]')
+
+    def cancel_checkout(self) -> None:
+        self.cancel_button.click()
+
+    def enter_customer_details(
+        self, first_name: str, last_name: str, postal_code: str
+    ) -> None:
+        self.first_name_field.fill(first_name)
+        self.last_name_field.fill(last_name)
+        self.postal_code_field.fill(postal_code)
+        self.continue_button.click()
+
+    def finish_checkout(self) -> None:
+        self.finish_button.click()
+
+    def go_back_to_inventory(self) -> None:
+        self.back_to_home_button.click()
