@@ -10,9 +10,7 @@ def test_successful_load(checkout_pages: SauceDemoCheckoutPages) -> None:
     checkout_pages.goto_cart()
     checkout_pages.checkout()
 
-    expect(checkout_pages.page).to_have_url(
-        "https://www.saucedemo.com/checkout-step-one.html"
-    )
+    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_one"])
 
     expect(checkout_pages.cancel_button).to_be_visible()
     expect(checkout_pages.continue_button).to_be_visible()
@@ -48,9 +46,7 @@ def test_customer_details__succeeds(
 
     checkout_pages.enter_customer_details(first_name, last_name, postal_code)
 
-    expect(checkout_pages.page).to_have_url(
-        "https://www.saucedemo.com/checkout-step-two.html"
-    )
+    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_two"])
 
     expect(checkout_pages.cancel_button).to_be_visible()
     expect(checkout_pages.cart_list).to_be_visible()
@@ -109,9 +105,7 @@ def test_complete_checkout(checkout_pages: SauceDemoCheckoutPages) -> None:
     checkout_pages.enter_customer_details("John", "Doe", "6000")
     checkout_pages.finish_checkout()
 
-    expect(checkout_pages.page).to_have_url(
-        "https://www.saucedemo.com/checkout-complete.html"
-    )
+    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_done"])
 
     expect(checkout_pages.back_to_home_button).to_be_visible()
     expect(checkout_pages.complete_checkout_container).to_be_visible()
@@ -137,7 +131,7 @@ def test_go_back_to_inventory_after_checkout(
     checkout_pages.finish_checkout()
     checkout_pages.go_back_to_inventory()
 
-    expect(checkout_pages.page).to_have_url("https://www.saucedemo.com/inventory.html")
+    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["inventory"])
 
 
 def test_can_logout_from_step_one(checkout_pages: SauceDemoCheckoutPages) -> None:
@@ -147,15 +141,13 @@ def test_can_logout_from_step_one(checkout_pages: SauceDemoCheckoutPages) -> Non
     checkout_pages.checkout()
 
     # assertions before logout
-    expect(checkout_pages.page).to_have_url(
-        "https://www.saucedemo.com/checkout-step-one.html"
-    )
+    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_one"])
 
     # logout
     checkout_pages.logout()
 
     # assertions after logout
-    expect(checkout_pages.page).to_have_url("https://www.saucedemo.com/")
+    expect(checkout_pages.page).to_have_url(checkout_pages.MAIN_URL)
 
 
 def test_can_logout_from_step_two(checkout_pages: SauceDemoCheckoutPages) -> None:
@@ -166,15 +158,13 @@ def test_can_logout_from_step_two(checkout_pages: SauceDemoCheckoutPages) -> Non
     checkout_pages.enter_customer_details("John", "Doe", "6000")
 
     # assertions before logout
-    expect(checkout_pages.page).to_have_url(
-        "https://www.saucedemo.com/checkout-step-two.html"
-    )
+    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_two"])
 
     # logout
     checkout_pages.logout()
 
     # assertions after logout
-    expect(checkout_pages.page).to_have_url("https://www.saucedemo.com/")
+    expect(checkout_pages.page).to_have_url(checkout_pages.MAIN_URL)
 
 
 def test_can_logout_from_finished_page(checkout_pages: SauceDemoCheckoutPages) -> None:
@@ -186,12 +176,10 @@ def test_can_logout_from_finished_page(checkout_pages: SauceDemoCheckoutPages) -
     checkout_pages.finish_checkout()
 
     # assertions before logout
-    expect(checkout_pages.page).to_have_url(
-        "https://www.saucedemo.com/checkout-complete.html"
-    )
+    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_done"])
 
     # logout
     checkout_pages.logout()
 
     # assertions after logout
-    expect(checkout_pages.page).to_have_url("https://www.saucedemo.com/")
+    expect(checkout_pages.page).to_have_url(checkout_pages.MAIN_URL)
