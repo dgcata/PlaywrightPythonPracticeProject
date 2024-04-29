@@ -10,10 +10,8 @@ between each webpage.
 
 filename for this test file is still tentative.
 
-Tests that are currently implemented are interaction between
-the inventory page, item pages and the cart page
-
-Checkout interactions is still in development
+(Optional) test changes in the interactions
+when not logged in as `standard_user` (if applicable)
 """
 
 import pytest
