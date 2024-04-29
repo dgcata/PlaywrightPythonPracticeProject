@@ -13,6 +13,15 @@ class SauceDemoItem:
 
 
 class SauceDemoBasePage:
+    MAIN_URL = "https://www.saucedemo.com"
+    SUB_URLS = {
+        "inventory": "/inventory.html",
+        "item": "/inventory-item.html?id={item_id}",
+        "cart": "/cart.html",
+        "checkout_one": "/checkout-step-one.html",
+        "checkout_two": "/checkout-step-two.html",
+        "checkout_done": "/checkout-complete.html",
+    }
     VALID_USERNAMES = [
         "standard_user",
         "problem_user",
