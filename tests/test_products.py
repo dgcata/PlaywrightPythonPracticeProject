@@ -139,7 +139,6 @@ def test_checkout_with_one_item(
         total_value,
     ) = calculate_subtotal_tax_and_total(inventory_page.TAX_RATE, item.item_price)
 
-    inventory_page.goto_inventory_standard()
     inventory_page.add_item_to_cart(item_id)
     inventory_page.goto_cart()
 
@@ -171,7 +170,6 @@ def test_checkout_with_two_items(
         inventory_page.TAX_RATE, fleece_jacket.item_price, other_item.item_price
     )
 
-    inventory_page.goto_inventory_standard()
     inventory_page.add_item_to_cart(5)
     inventory_page.add_item_to_cart(item_id)
     inventory_page.goto_cart()
@@ -185,3 +183,77 @@ def test_checkout_with_two_items(
     expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
     expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
+
+
+def test_checkout_with_all_items(
+    inventory_page__buy_all: SauceDemoInventoryPage,
+    cart_page: SauceDemoCartPage,
+    checkout_pages: SauceDemoCheckoutPages,
+) -> None:
+    item_price_list = [
+        item.item_price for item in inventory_page__buy_all.VALID_ITEMS.values()
+    ]
+
+    (
+        sub_total,
+        tax_value,
+        total_value,
+    ) = calculate_subtotal_tax_and_total(
+        inventory_page__buy_all.TAX_RATE,
+        *item_price_list,
+    )
+
+    inventory_page__buy_all.goto_cart()
+
+    cart_page.checkout()
+
+    checkout_pages.enter_customer_details("John", "Doe", "6000")
+
+    expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
+    expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
+    expect(checkout_pages.total_label).to_contain_text(str(total_value))
+
+
+@pytest.mark.skip("sauce demo behavior unpredictable")
+@pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
+def test_checkout_without_one_item(
+    inventory_page__buy_all: SauceDemoInventoryPage,
+    cart_page: SauceDemoCartPage,
+    checkout_pages: SauceDemoCheckoutPages,
+    item_to_remove_id: int,
+) -> None:
+    # sauce demo's behavior is unpredictable
+    # sometimes the price displayed on the website
+    # only have two decimal points
+    # and sometimes it is non-terminating
+    # this is an issue on sauce demo's end
+
+    item_price_list = [
+        item.item_price
+        for item_id, item in inventory_page__buy_all.VALID_ITEMS.items()
+        if item_id != item_to_remove_id
+    ]
+    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
+        item_to_remove_id
+    ].item_name
+
+    (
+        sub_total,
+        tax_value,
+        total_value,
+    ) = calculate_subtotal_tax_and_total(
+        inventory_page__buy_all.TAX_RATE,
+        *item_price_list,
+    )
+
+    inventory_page__buy_all.remove_item_from_cart(item_to_remove_id)
+    inventory_page__buy_all.goto_cart()
+
+    cart_page.checkout()
+
+    checkout_pages.enter_customer_details("John", "Doe", "6000")
+
+    expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
+    expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
+    expect(checkout_pages.total_label).to_contain_text(str(total_value))
+    expect(checkout_pages.cart_list).not_to_contain_text(item_to_remove_name)
