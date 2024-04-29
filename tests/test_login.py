@@ -27,7 +27,7 @@ def test_successful_login(login_page: SauceDemoLoginPage, username: str) -> None
 
 
 @pytest.mark.parametrize(
-    "username, password, expected_message",
+    "username, password, error_msg",
     [
         # wrong passwords
         (
@@ -98,10 +98,10 @@ def test_failing_login(
     login_page: SauceDemoLoginPage,
     username: str,
     password: str,
-    expected_message: str,
+    error_msg: str,
 ) -> None:
     expect(login_page.error_container).not_to_be_visible()
     login_page.login(username, password)
 
     expect(login_page.error_container).to_be_visible()
-    expect(login_page.error_container).to_contain_text(expected_message)
+    expect(login_page.error_container).to_contain_text(error_msg)
