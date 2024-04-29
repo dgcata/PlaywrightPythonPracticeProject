@@ -8,7 +8,7 @@ def test_successful_load(cart_page: SauceDemoCartPage) -> None:
     cart_page.goto_inventory_standard()
     cart_page.goto_cart()
 
-    expect(cart_page.page).to_have_url("https://www.saucedemo.com/cart.html")
+    expect(cart_page.page).to_have_url(cart_page.URLS["cart"])
     expect(cart_page.continue_shopping_button).to_be_visible()
     expect(cart_page.checkout_button).to_be_visible()
     expect(cart_page.cart_list).to_be_visible()
@@ -19,7 +19,7 @@ def test_can_logout_from_cart_page(cart_page: SauceDemoCartPage) -> None:
     cart_page.goto_cart()
     cart_page.logout()
 
-    expect(cart_page.page).to_have_url("https://www.saucedemo.com/")
+    expect(cart_page.page).to_have_url(cart_page.MAIN_URL)
 
 
 def test_can_checkout_from_cart_page(cart_page: SauceDemoCartPage) -> None:
@@ -28,9 +28,7 @@ def test_can_checkout_from_cart_page(cart_page: SauceDemoCartPage) -> None:
     cart_page.goto_cart()
     cart_page.checkout()
 
-    expect(cart_page.page).to_have_url(
-        "https://www.saucedemo.com/checkout-step-one.html"
-    )
+    expect(cart_page.page).to_have_url(cart_page.URLS["checkout_one"])
 
 
 @pytest.mark.skip("needs fixing from Sauce Labs' end")
@@ -51,7 +49,7 @@ def test_can_go_back_to_inventory(cart_page: SauceDemoCartPage) -> None:
     cart_page.goto_cart()
     cart_page.continue_shopping()
 
-    expect(cart_page.page).to_have_url("https://www.saucedemo.com/inventory.html")
+    expect(cart_page.page).to_have_url(cart_page.URLS["inventory"])
 
 
 @pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4, 5])

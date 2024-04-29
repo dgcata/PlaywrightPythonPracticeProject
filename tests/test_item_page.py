@@ -21,9 +21,7 @@ def test_successful_load(
     item_page.goto_inventory_standard()
     item_page.goto_item_page(item_id)
 
-    expect(item_page.page).to_have_url(
-        f"https://www.saucedemo.com/inventory-item.html?id={item_id}"
-    )
+    expect(item_page.page).to_have_url(item_page.URLS["item"].format(item_id))
 
     expect(item_page.item_name).to_contain_text(item_name)
     expect(item_page.item_description).to_be_visible()
@@ -70,7 +68,7 @@ def test_can_go_back_to_inventory_from_item_page(
 ) -> None:
     fleece_jacket_item_page.go_back_to_inventory()
     expect(fleece_jacket_item_page.page).to_have_url(
-        "https://www.saucedemo.com/inventory.html"
+        fleece_jacket_item_page.URLS["inventory"]
     )
 
 
@@ -79,10 +77,10 @@ def test_can_goto_cart_from_item_page(
 ) -> None:
     fleece_jacket_item_page.goto_cart()
     expect(fleece_jacket_item_page.page).to_have_url(
-        "https://www.saucedemo.com/cart.html"
+        fleece_jacket_item_page.URLS["cart"]
     )
 
 
 def test_can_logout_from_item_page(fleece_jacket_item_page: SauceDemoItemPage) -> None:
     fleece_jacket_item_page.logout()
-    expect(fleece_jacket_item_page.page).to_have_url("https://www.saucedemo.com/")
+    expect(fleece_jacket_item_page.page).to_have_url(fleece_jacket_item_page.MAIN_URL)
