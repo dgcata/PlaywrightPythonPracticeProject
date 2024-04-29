@@ -20,8 +20,10 @@ import pytest
 from playwright.sync_api import expect
 
 from pages.cart_page import SauceDemoCartPage
+from pages.checkout_pages import SauceDemoCheckoutPages
 from pages.inventory_page import SauceDemoInventoryPage
 from pages.item_page import SauceDemoItemPage
+from utils.accounting import calculate_subtotal_tax_and_total
 
 
 @pytest.mark.parametrize("other_item_id", [0, 1, 2, 3, 4])
@@ -121,3 +123,65 @@ def test_removing_product_from_item_page(
     item_page.goto_cart()
 
     expect(cart_page.cart_list).not_to_contain_text(item_to_remove_name)
+
+
+@pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4, 5])
+def test_checkout_with_one_item(
+    inventory_page: SauceDemoInventoryPage,
+    cart_page: SauceDemoCartPage,
+    checkout_pages: SauceDemoCheckoutPages,
+    item_id: int,
+) -> None:
+    item = inventory_page.VALID_ITEMS[item_id]
+    (
+        sub_total,
+        tax_value,
+        total_value,
+    ) = calculate_subtotal_tax_and_total(inventory_page.TAX_RATE, item.item_price)
+
+    inventory_page.goto_inventory_standard()
+    inventory_page.add_item_to_cart(item_id)
+    inventory_page.goto_cart()
+
+    cart_page.checkout()
+
+    checkout_pages.enter_customer_details("John", "Doe", "6000")
+
+    expect(checkout_pages.cart_list).to_contain_text(item.item_name)
+    expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
+    expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
+    expect(checkout_pages.total_label).to_contain_text(str(total_value))
+
+
+@pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4])
+def test_checkout_with_two_items(
+    inventory_page: SauceDemoInventoryPage,
+    cart_page: SauceDemoCartPage,
+    checkout_pages: SauceDemoCheckoutPages,
+    item_id: int,
+) -> None:
+    fleece_jacket = inventory_page.VALID_ITEMS[5]
+    other_item = inventory_page.VALID_ITEMS[item_id]
+
+    (
+        sub_total,
+        tax_value,
+        total_value,
+    ) = calculate_subtotal_tax_and_total(
+        inventory_page.TAX_RATE, fleece_jacket.item_price, other_item.item_price
+    )
+
+    inventory_page.goto_inventory_standard()
+    inventory_page.add_item_to_cart(5)
+    inventory_page.add_item_to_cart(item_id)
+    inventory_page.goto_cart()
+
+    cart_page.checkout()
+
+    checkout_pages.enter_customer_details("John", "Doe", "6000")
+
+    expect(checkout_pages.cart_list).to_contain_text(fleece_jacket.item_name)
+    expect(checkout_pages.cart_list).to_contain_text(other_item.item_name)
+    expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
+    expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
+    expect(checkout_pages.total_label).to_contain_text(str(total_value))
