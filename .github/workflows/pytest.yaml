@@ -30,13 +30,13 @@ jobs:
         run: python -m playwright install --with-deps
 
       - name: Run Playwright on chromium
-        run: pytest --browser=chromium --tracing=retain-on-failure --numprocesses=6
+        run: pytest --browser=chromium --tracing=retain-on-failure --numprocesses=auto
 
       - name: Run Playwright on firefox
-        run: pytest --browser=firefox --tracing=retain-on-failure --numprocesses=6
+        run: pytest --browser=firefox --tracing=retain-on-failure --numprocesses=auto
 
       - name: Run Playwright on webkit
-        run: pytest --browser=webkit --tracing=retain-on-failure --numprocesses=6
+        run: pytest --browser=webkit --tracing=retain-on-failure --numprocesses=auto
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
