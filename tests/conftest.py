@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import Page
 
 from pages.cart_page import SauceDemoCartPage
+from pages.checkout_pages import SauceDemoCheckoutPages
 from pages.inventory_page import SauceDemoInventoryPage
 from pages.item_page import SauceDemoItemPage
 from pages.login_page import SauceDemoLoginPage
@@ -31,6 +32,12 @@ def item_page(page: Page) -> SauceDemoItemPage:
 def cart_page(page: Page) -> SauceDemoCartPage:
     cart_page = SauceDemoCartPage(page)
     return cart_page
+
+
+@pytest.fixture
+def checkout_pages(page: Page) -> SauceDemoCheckoutPages:
+    checkout_pages = SauceDemoCheckoutPages(page)
+    return checkout_pages
 
 
 @pytest.fixture
