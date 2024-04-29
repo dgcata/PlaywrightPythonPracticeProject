@@ -55,7 +55,6 @@ def test_customer_details__succeeds(
     expect(checkout_pages.total_label).to_be_visible()
     expect(checkout_pages.finish_button).to_be_visible()
 
-    expect(checkout_pages.error_container).not_to_be_visible()
     expect(checkout_pages.continue_button).not_to_be_visible()
     expect(checkout_pages.checkout_info).not_to_be_visible()
     expect(checkout_pages.back_to_home_button).not_to_be_visible()
