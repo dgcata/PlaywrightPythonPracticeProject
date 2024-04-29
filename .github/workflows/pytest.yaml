@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - main 
+      - main
 
 jobs:
   test:
@@ -14,32 +14,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install -U pip
-        python -m pip install -r requirements.txt
-    
-    - name: Install Playwright Browsers
-      run: python -m playwright install --with-deps
+      - name: Install Dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -r requirements.txt
 
-    - name: Run Playwright on chromium
-      run: pytest --browser chromium --tracing=retain-on-failure
-    
-    - name: Run Playwright on firefox
-      run: pytest --browser firefox --tracing=retain-on-failure
-    
-    - name: Run Playwright on webkit
-      run: pytest --browser webkit --tracing=retain-on-failure
+      - name: Install Playwright Browsers
+        run: python -m playwright install --with-deps
 
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-traces
-        path: test-results/
+      - name: Run Playwright on chromium
+        run: pytest --browser=chromium --tracing=retain-on-failure --numprocesses=6
+
+      - name: Run Playwright on firefox
+        run: pytest --browser=firefox --tracing=retain-on-failure --numprocesses=6
+
+      - name: Run Playwright on webkit
+        run: pytest --browser=webkit --tracing=retain-on-failure --numprocesses=6
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-traces
+          path: test-results/
