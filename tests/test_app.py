@@ -14,6 +14,8 @@ filename for this test file is still tentative.
 when not logged in as `standard_user` (if applicable)
 """
 
+from decimal import Decimal
+
 import pytest
 from playwright.sync_api import expect
 
@@ -138,6 +140,9 @@ def test_checkout_with_one_item(
     ) = calculate_subtotal_tax_and_total(inventory_page.TAX_RATE, item.item_price)
 
     inventory_page.add_item_to_cart(item_id)
+    expect(
+        inventory_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(1)
     inventory_page.goto_cart()
 
     cart_page.checkout()
@@ -148,6 +153,12 @@ def test_checkout_with_one_item(
     expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
     expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
+
+    checkout_pages.finish_checkout()
+    checkout_pages.go_back_to_inventory()
+    expect(
+        inventory_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(0)
 
 
 @pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4])
@@ -170,6 +181,9 @@ def test_checkout_with_two_items(
 
     inventory_page.add_item_to_cart(5)
     inventory_page.add_item_to_cart(item_id)
+    expect(
+        inventory_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(2)
     inventory_page.goto_cart()
 
     cart_page.checkout()
@@ -181,6 +195,12 @@ def test_checkout_with_two_items(
     expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
     expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
+
+    checkout_pages.finish_checkout()
+    checkout_pages.go_back_to_inventory()
+    expect(
+        inventory_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(0)
 
 
 def test_checkout_with_all_items(
@@ -201,6 +221,9 @@ def test_checkout_with_all_items(
         *item_price_list,
     )
 
+    expect(
+        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(6)
     inventory_page__buy_all.goto_cart()
 
     cart_page.checkout()
@@ -211,8 +234,13 @@ def test_checkout_with_all_items(
     expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
 
+    checkout_pages.finish_checkout()
+    checkout_pages.go_back_to_inventory()
+    expect(
+        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(0)
 
-@pytest.mark.skip("sauce demo behavior unpredictable")
+
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
 def test_checkout_without_one_item(
     inventory_page__buy_all: SauceDemoInventoryPage,
@@ -220,12 +248,6 @@ def test_checkout_without_one_item(
     checkout_pages: SauceDemoCheckoutPages,
     item_to_remove_id: int,
 ) -> None:
-    # sauce demo's behavior is unpredictable
-    # sometimes the price displayed on the website
-    # only have two decimal points
-    # and sometimes it is non-terminating
-    # this is an issue on sauce demo's end
-
     item_price_list = [
         item.item_price
         for item_id, item in inventory_page__buy_all.VALID_ITEMS.items()
@@ -245,13 +267,36 @@ def test_checkout_without_one_item(
     )
 
     inventory_page__buy_all.remove_item_from_cart(item_to_remove_id)
+    expect(
+        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(5)
     inventory_page__buy_all.goto_cart()
 
     cart_page.checkout()
 
     checkout_pages.enter_customer_details("John", "Doe", "6000")
 
-    expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
+    # sauce demo's behaviour is unpredictable
+    # sometimes the price displayed on the website #only have two decimal points
+    # and sometimes it is non-terminating, this is an issue on sauce lab's end
+    # adding this block to avoid flakiness in the subtotal_label, remove when Sauce Labs fixes this ui issue
+    subtotal_label = calculate_subtotal_tax_and_total(
+        inventory_page__buy_all.TAX_RATE,
+        # text_content() -> str("Item total: $[:Decimal]"), i.e. Decimal starts at the 13th index
+        Decimal(
+            checkout_pages.subtotal_label.text_content()[13:]  # type:ignore[index]
+        ),
+    )[0]
+    assert subtotal_label == sub_total
+
+    # TODO: uncomment this assertion and remove the code above this when the UI issue in Sauce Demo has been fixed
+    # expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
     expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
     expect(checkout_pages.cart_list).not_to_contain_text(item_to_remove_name)
+
+    checkout_pages.finish_checkout()
+    checkout_pages.go_back_to_inventory()
+    expect(
+        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(0)
