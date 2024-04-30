@@ -14,8 +14,6 @@ filename for this test file is still tentative.
 when not logged in as `standard_user` (if applicable)
 """
 
-from decimal import Decimal
-
 import pytest
 from playwright.sync_api import expect
 
@@ -282,10 +280,8 @@ def test_checkout_without_one_item(
     # adding this block to avoid flakiness in the subtotal_label, remove when Sauce Labs fixes this ui issue
     subtotal_label = calculate_subtotal_tax_and_total(
         inventory_page__buy_all.TAX_RATE,
-        # text_content() -> str("Item total: $[:Decimal]"), i.e. Decimal starts at the 13th index
-        Decimal(
-            checkout_pages.subtotal_label.text_content()[13:]  # type:ignore[index]
-        ),
+        # text_content() -> str("Item total: $[:float]"), i.e. float starts at the 13th index
+        checkout_pages.subtotal_label.text_content()[13:],  # type:ignore[index]
     )[0]
     assert subtotal_label == sub_total
 
