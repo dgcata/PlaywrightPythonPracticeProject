@@ -13,8 +13,6 @@ class SauceDemoItem:
 
 
 class SauceDemoBasePage:
-    # TODO: should all of these remain as class attributes
-    # or should it be implemented as read-only object attributes
     MAIN_URL = "https://www.saucedemo.com/"
     URLS = {
         "inventory": MAIN_URL + "inventory.html",
