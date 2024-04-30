@@ -153,6 +153,10 @@ def test_checkout_with_one_item(
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
 
     checkout_pages.finish_checkout()
+    expect(checkout_pages.complete_checkout_container).to_contain_text(
+        "Thank you for your order!"
+    )
+
     checkout_pages.go_back_to_inventory()
     expect(
         inventory_page.page.get_by_role("button").filter(has_text="Remove")
@@ -195,6 +199,10 @@ def test_checkout_with_two_items(
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
 
     checkout_pages.finish_checkout()
+    expect(checkout_pages.complete_checkout_container).to_contain_text(
+        "Thank you for your order!"
+    )
+
     checkout_pages.go_back_to_inventory()
     expect(
         inventory_page.page.get_by_role("button").filter(has_text="Remove")
@@ -233,6 +241,10 @@ def test_checkout_with_all_items(
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
 
     checkout_pages.finish_checkout()
+    expect(checkout_pages.complete_checkout_container).to_contain_text(
+        "Thank you for your order!"
+    )
+
     checkout_pages.go_back_to_inventory()
     expect(
         inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
@@ -292,6 +304,10 @@ def test_checkout_without_one_item(
     expect(checkout_pages.cart_list).not_to_contain_text(item_to_remove_name)
 
     checkout_pages.finish_checkout()
+    expect(checkout_pages.complete_checkout_container).to_contain_text(
+        "Thank you for your order!"
+    )
+
     checkout_pages.go_back_to_inventory()
     expect(
         inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
