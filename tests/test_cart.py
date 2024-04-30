@@ -57,15 +57,15 @@ def test_can_remove_an_item_from_cart_page(
     cart_page: SauceDemoCartPage,
     item_id: int,
 ) -> None:
-    item_name = cart_page.VALID_ITEMS[item_id].item_name
+    item = cart_page.VALID_ITEMS[item_id]
 
     cart_page.goto_inventory_standard()
     cart_page.add_item_to_cart(item_id)
     cart_page.goto_cart()
 
     # assertion before removing item
-    expect(cart_page.cart_list).to_contain_text(item_name)
+    expect(cart_page.cart_list).to_contain_text(item.item_name)
     # removing item
     cart_page.remove_item_from_cart(item_id)
     # assertion after removing item
-    expect(cart_page.cart_list).not_to_contain_text(item_name)
+    expect(cart_page.cart_list).not_to_contain_text(item.item_name)

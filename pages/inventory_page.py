@@ -1,5 +1,6 @@
 from playwright.sync_api import Locator, Page
 
+from pages.base_page import SauceDemoItem
 from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
 
 
@@ -44,12 +45,14 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
         self.__get_remove_from_cart_button(item_id).click()
 
     def __get_item_link(self, item_id: int) -> Locator:
-        item_name = self.__get_item_name(item_id)
+        item = self.__get_item(item_id)
+        item_name = item.item_name
         item_link = self.page.get_by_role("link").filter(has_text=item_name)
         return item_link
 
     def __get_add_to_cart_button(self, item_id: int) -> Locator:
-        item_name = self.__get_item_name(item_id)
+        item = self.__get_item(item_id)
+        item_name = item.item_name
         formatted_item_name = item_name.lower().replace(" ", "-")
         add_to_card_button = self.page.locator(
             f'[data-test="add-to-cart-{formatted_item_name}"]'
@@ -57,16 +60,17 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
         return add_to_card_button
 
     def __get_remove_from_cart_button(self, item_id: int) -> Locator:
-        item_name = self.__get_item_name(item_id)
+        item = self.__get_item(item_id)
+        item_name = item.item_name
         formatted_item_name = item_name.lower().replace(" ", "-")
         remove_from_card_button = self.page.locator(
             f'[data-test="remove-{formatted_item_name}"]'
         )
         return remove_from_card_button
 
-    def __get_item_name(self, item_id: int) -> str:
+    def __get_item(self, item_id: int) -> SauceDemoItem:
         try:
-            item_name = self.VALID_ITEMS[item_id].item_name
-            return item_name
+            item = self.VALID_ITEMS[item_id]
+            return item
         except KeyError:
             raise ItemDoesNotExistException(f"item with id '{item_id}' not found")

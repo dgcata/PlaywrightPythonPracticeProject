@@ -30,7 +30,7 @@ def test_adding_products_from_inventory_page(
     cart_page: SauceDemoCartPage,
     other_item_id: int,
 ) -> None:
-    other_item_name = inventory_page.VALID_ITEMS[other_item_id].item_name
+    other_item = inventory_page.VALID_ITEMS[other_item_id]
 
     inventory_page.add_item_to_cart(5)
     inventory_page.add_item_to_cart(other_item_id)
@@ -38,7 +38,7 @@ def test_adding_products_from_inventory_page(
 
     expect(cart_page.page).to_have_url(inventory_page.URLS["cart"])
     expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
-    expect(cart_page.cart_list).to_contain_text(other_item_name)
+    expect(cart_page.cart_list).to_contain_text(other_item.item_name)
     expect(
         cart_page.page.get_by_role("button").filter(has_text="Remove")
     ).to_have_count(2)
@@ -51,7 +51,7 @@ def test_adding_products_from_item_page(
     cart_page: SauceDemoCartPage,
     other_item_id: int,
 ) -> None:
-    other_item_name = inventory_page.VALID_ITEMS[other_item_id].item_name
+    other_item = inventory_page.VALID_ITEMS[other_item_id]
 
     inventory_page.goto_item_page(5)
     item_page.add_item_to_cart()
@@ -63,7 +63,7 @@ def test_adding_products_from_item_page(
 
     expect(cart_page.page).to_have_url(inventory_page.URLS["cart"])
     expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
-    expect(cart_page.cart_list).to_contain_text(other_item_name)
+    expect(cart_page.cart_list).to_contain_text(other_item.item_name)
     expect(
         cart_page.page.get_by_role("button").filter(has_text="Remove")
     ).to_have_count(2)
@@ -75,16 +75,14 @@ def test_removing_product_from_inventory_page(
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
-        item_to_remove_id
-    ].item_name
+    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
 
     # removes item first in the inventory
     # page before going to the cart page
     inventory_page__buy_all.remove_item_from_cart(item_to_remove_id)
     inventory_page__buy_all.goto_cart()
 
-    expect(cart_page.cart_list).not_to_contain_text(item_to_remove_name)
+    expect(cart_page.cart_list).not_to_contain_text(item_to_remove.item_name)
     expect(
         cart_page.page.get_by_role("button").filter(has_text="Remove")
     ).to_have_count(5)
@@ -96,19 +94,17 @@ def test_removing_product_from_cart_page(
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
-        item_to_remove_id
-    ].item_name
+    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
 
     # goes to the cart page first before
     # removing the item in the cart page
     inventory_page__buy_all.goto_cart()
 
-    expect(cart_page.cart_list).to_contain_text(item_to_remove_name)
+    expect(cart_page.cart_list).to_contain_text(item_to_remove.item_name)
 
     cart_page.remove_item_from_cart(item_to_remove_id)
 
-    expect(cart_page.cart_list).not_to_contain_text(item_to_remove_name)
+    expect(cart_page.cart_list).not_to_contain_text(item_to_remove.item_name)
     expect(
         cart_page.page.get_by_role("button").filter(has_text="Remove")
     ).to_have_count(5)
@@ -121,9 +117,7 @@ def test_removing_product_from_item_page(
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
-        item_to_remove_id
-    ].item_name
+    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
 
     # goes to the specific item page first
     # then removes the item there before
@@ -132,7 +126,7 @@ def test_removing_product_from_item_page(
     item_page.remove_item_from_cart()
     item_page.goto_cart()
 
-    expect(cart_page.cart_list).not_to_contain_text(item_to_remove_name)
+    expect(cart_page.cart_list).not_to_contain_text(item_to_remove.item_name)
     expect(
         cart_page.page.get_by_role("button").filter(has_text="Remove")
     ).to_have_count(5)
@@ -278,9 +272,7 @@ def test_checkout_without_one_item(
         for item_id, item in inventory_page__buy_all.VALID_ITEMS.items()
         if item_id != item_to_remove_id
     ]
-    item_to_remove_name = inventory_page__buy_all.VALID_ITEMS[
-        item_to_remove_id
-    ].item_name
+    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
 
     (
         sub_total,
@@ -316,7 +308,7 @@ def test_checkout_without_one_item(
     # expect(checkout_pages.subtotal_label).to_contain_text(str(sub_total))
     expect(checkout_pages.tax_label).to_contain_text(str(tax_value))
     expect(checkout_pages.total_label).to_contain_text(str(total_value))
-    expect(checkout_pages.cart_list).not_to_contain_text(item_to_remove_name)
+    expect(checkout_pages.cart_list).not_to_contain_text(item_to_remove.item_name)
 
     checkout_pages.finish_checkout()
     expect(checkout_pages.complete_checkout_container).to_contain_text(
