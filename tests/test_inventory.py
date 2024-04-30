@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import expect
 
 from pages.inventory_page import SauceDemoInventoryPage
+from pages.login_page import InvalidUserException
 
 
 def test_successful_load(inventory_page: SauceDemoInventoryPage) -> None:
@@ -55,3 +56,15 @@ def test_item_link(
 def test_goto_cart(inventory_page: SauceDemoInventoryPage) -> None:
     inventory_page.goto_cart()
     expect(inventory_page.page).to_have_url(inventory_page.URLS["cart"])
+
+
+@pytest.mark.parametrize("invalid_username", ["not_a_user", "different_user"])
+def test_goto_inventory_as_invalid_user(
+    inventory_page: SauceDemoInventoryPage, invalid_username: str
+) -> None:
+    inventory_page.logout()
+    with pytest.raises(Exception) as e:
+        inventory_page.goto_inventory_as_user(invalid_username)
+
+    assert e.type == InvalidUserException
+    assert invalid_username in str(e.value)

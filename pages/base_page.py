@@ -1,11 +1,12 @@
 import sys
 from dataclasses import dataclass
 from decimal import Decimal
+from typing import Any, Dict, Final
 
 from playwright.sync_api import Page
 
 
-@dataclass
+@dataclass(frozen=True)
 class SauceDemoItem:
     item_name: str
     item_price: Decimal
@@ -14,7 +15,7 @@ class SauceDemoItem:
 
 class SauceDemoBasePage:
     MAIN_URL = "https://www.saucedemo.com/"
-    URLS = {
+    URLS: Final[Dict[str, str]] = {
         "inventory": MAIN_URL + "inventory.html",
         "item": MAIN_URL + "inventory-item.html?id={}",
         "cart": MAIN_URL + "cart.html",
@@ -22,16 +23,16 @@ class SauceDemoBasePage:
         "checkout_two": MAIN_URL + "checkout-step-two.html",
         "checkout_done": MAIN_URL + "checkout-complete.html",
     }
-    VALID_USERS = [
+    VALID_USERS = (
         "standard_user",
         "problem_user",
         "performance_glitch_user",
         "error_user",
         "visual_user",
-    ]
+    )
     LOCKED_OUT_USER = "locked_out_user"
     PASSWORD = "secret_sauce"
-    VALID_ITEMS = {
+    VALID_ITEMS: Final[Dict[int, SauceDemoItem]] = {
         0: SauceDemoItem(
             item_name="Sauce Labs Bike Light",
             item_price=Decimal("9.99"),
@@ -79,6 +80,13 @@ class SauceDemoBasePage:
         # NOTE: flag '--headed' is neccessary
         if "--debug" in sys.argv:
             self.pause()
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        # ensure class attributes are read-only
+        if hasattr(self, name) or name in ("URLS", "VALID_ITEMS"):
+            raise AttributeError(f"{name} is read-only")
+        else:
+            super().__setattr__(name, value)
 
     def pause(self) -> None:
         """Call this method in a specific test you want to debug.
