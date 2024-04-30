@@ -83,7 +83,7 @@ class SauceDemoBasePage:
 
     def __setattr__(self, name: str, value: Any) -> None:
         # ensure class attributes are read-only
-        if hasattr(self, name) or name in ("URLS", "VALID_ITEMS"):
+        if hasattr(self, name):
             raise AttributeError(f"{name} is read-only")
         else:
             super().__setattr__(name, value)
