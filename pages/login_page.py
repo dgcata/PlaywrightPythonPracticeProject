@@ -3,7 +3,7 @@ from playwright.sync_api import Page
 from pages.base_page import SauceDemoBasePage
 
 
-class InvalidUsernameException(Exception):
+class InvalidUserException(Exception):
     pass
 
 

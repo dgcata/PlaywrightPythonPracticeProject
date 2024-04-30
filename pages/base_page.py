@@ -22,13 +22,14 @@ class SauceDemoBasePage:
         "checkout_two": MAIN_URL + "checkout-step-two.html",
         "checkout_done": MAIN_URL + "checkout-complete.html",
     }
-    VALID_USERNAMES = [
+    VALID_USERS = [
         "standard_user",
         "problem_user",
         "performance_glitch_user",
         "error_user",
         "visual_user",
     ]
+    LOCKED_OUT_USER = "locked_out_user"
     PASSWORD = "secret_sauce"
     VALID_ITEMS = {
         0: SauceDemoItem(
@@ -80,4 +81,17 @@ class SauceDemoBasePage:
             self.pause()
 
     def pause(self) -> None:
+        """Call this method in a specific test you want to debug.
+        Example:
+
+        def test_sample(login_page: SauceDemoLoginPage) -> None:
+            login_page.pause()
+            # rest of the test
+
+        Essentially this provides a shortcut, instead of typing
+        `login_page.page.pause()`, `cart_page.page.pause()`, etc.,
+        We can instead skip the call to the instance attribute.
+
+        NOTE: flag '--headed' is still neccessary"""
+
         self.page.pause()

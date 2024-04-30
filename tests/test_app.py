@@ -8,8 +8,6 @@ This is done to separate the concern of testing
 the components of each webpage and the interaction
 between each webpage.
 
-filename for this test file is still tentative.
-
 (Optional) test changes in the interactions
 when not logged in as `standard_user` (if applicable)
 """

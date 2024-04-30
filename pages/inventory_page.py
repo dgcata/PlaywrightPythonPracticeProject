@@ -1,7 +1,7 @@
 from playwright.sync_api import Locator, Page
 
 from pages.base_page import SauceDemoItem
-from pages.login_page import InvalidUsernameException, SauceDemoLoginPage
+from pages.login_page import InvalidUserException, SauceDemoLoginPage
 
 
 class ItemDoesNotExistException(Exception):
@@ -18,10 +18,8 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
         self.logout_button = page.locator('[data-test="logout-sidebar-link"]')
 
     def goto_inventory_as_user(self, username: str) -> None:
-        if username not in self.VALID_USERNAMES:
-            raise InvalidUsernameException(
-                f"username '{username}' is an invalid username"
-            )
+        if username not in self.VALID_USERS:
+            raise InvalidUserException(f"user '{username}' is an invalid user")
         self.goto_login()
         self.login(username, self.PASSWORD)
 
