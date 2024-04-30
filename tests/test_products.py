@@ -39,6 +39,9 @@ def test_adding_products_from_inventory_page(
     expect(cart_page.page).to_have_url(inventory_page.URLS["cart"])
     expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
     expect(cart_page.cart_list).to_contain_text(other_item_name)
+    expect(
+        cart_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(2)
 
 
 @pytest.mark.parametrize("other_item_id", [0, 1, 2, 3, 4])
@@ -61,6 +64,9 @@ def test_adding_products_from_item_page(
     expect(cart_page.page).to_have_url(inventory_page.URLS["cart"])
     expect(cart_page.cart_list).to_contain_text("Sauce Labs Fleece Jacket")
     expect(cart_page.cart_list).to_contain_text(other_item_name)
+    expect(
+        cart_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(2)
 
 
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
@@ -79,6 +85,9 @@ def test_removing_product_from_inventory_page(
     inventory_page__buy_all.goto_cart()
 
     expect(cart_page.cart_list).not_to_contain_text(item_to_remove_name)
+    expect(
+        cart_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(5)
 
 
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
@@ -100,6 +109,9 @@ def test_removing_product_from_cart_page(
     cart_page.remove_item_from_cart(item_to_remove_id)
 
     expect(cart_page.cart_list).not_to_contain_text(item_to_remove_name)
+    expect(
+        cart_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(5)
 
 
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
@@ -121,3 +133,6 @@ def test_removing_product_from_item_page(
     item_page.goto_cart()
 
     expect(cart_page.cart_list).not_to_contain_text(item_to_remove_name)
+    expect(
+        cart_page.page.get_by_role("button").filter(has_text="Remove")
+    ).to_have_count(5)
