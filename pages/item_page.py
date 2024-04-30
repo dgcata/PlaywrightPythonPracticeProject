@@ -1,3 +1,5 @@
+from typing import Union
+
 from playwright.sync_api import Page
 
 from pages.inventory_page import SauceDemoInventoryPage
@@ -24,5 +26,5 @@ class SauceDemoItemPage(SauceDemoInventoryPage):
     def remove_item_from_cart(self) -> None:  # type: ignore[override]
         self.remove_button.click()
 
-    def goto_item_page(self, item_id: int) -> None:
+    def goto_item_page(self, item_id: Union[int, str]) -> None:
         self.page.goto(f"https://www.saucedemo.com/inventory-item.html?id={item_id}")

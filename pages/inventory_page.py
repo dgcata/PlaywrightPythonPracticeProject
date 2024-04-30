@@ -70,7 +70,6 @@ class SauceDemoInventoryPage(SauceDemoLoginPage):
 
     def __get_item(self, item_id: int) -> SauceDemoItem:
         try:
-            item = self.VALID_ITEMS[item_id]
-            return item
+            return self.VALID_ITEMS[item_id]
         except KeyError:
             raise ItemDoesNotExistException(f"item with id '{item_id}' not found")
