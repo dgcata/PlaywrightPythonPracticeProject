@@ -55,9 +55,3 @@ def test_item_link(
 def test_goto_cart(inventory_page: SauceDemoInventoryPage) -> None:
     inventory_page.goto_cart()
     expect(inventory_page.page).to_have_url(inventory_page.URLS["cart"])
-
-
-@pytest.mark.skip("still in development")
-def test_filter(inventory_page: SauceDemoInventoryPage) -> None:
-    # implement in the future
-    ...
