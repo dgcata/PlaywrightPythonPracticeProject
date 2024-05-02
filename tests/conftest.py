@@ -41,7 +41,26 @@ def checkout_pages(page: Page) -> SauceDemoCheckoutPages:
 
 
 @pytest.fixture
-def inventory_page__buy_all(
+def checkout_with_one_item(page: Page) -> SauceDemoCheckoutPages:
+    checkout_pages = SauceDemoCheckoutPages(page)
+    checkout_pages.goto_inventory_standard()
+    checkout_pages.add_item_to_cart(0)
+    checkout_pages.goto_cart()
+    checkout_pages.checkout()
+    return checkout_pages
+
+
+@pytest.fixture
+def cart_with_one_item(page: Page) -> SauceDemoCartPage:
+    cart_page = SauceDemoCartPage(page)
+    cart_page.goto_inventory_standard()
+    cart_page.add_item_to_cart(0)
+    cart_page.goto_cart()
+    return cart_page
+
+
+@pytest.fixture
+def buy_all_items_from_inventory(
     inventory_page: SauceDemoInventoryPage,
 ) -> SauceDemoInventoryPage:
     for item_id in inventory_page.VALID_ITEMS:

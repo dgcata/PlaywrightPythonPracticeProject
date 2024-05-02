@@ -14,6 +14,7 @@ class SauceDemoItem:
 
 
 class SauceDemoBasePage:
+    PAGE_TITLE = "Swag Labs"
     MAIN_URL = "https://www.saucedemo.com/"
     URLS = {
         "inventory": MAIN_URL + "inventory.html",

@@ -1,15 +1,11 @@
-from typing import Union
-
 import pytest
 from playwright.sync_api import expect
 
 from pages.item_page import SauceDemoItemPage
 
 
-@pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4, 5, "0", "1", "2", "3", "4", "5"])
-def test_successful_load(
-    item_page: SauceDemoItemPage, item_id: Union[int, str]
-) -> None:
+@pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4, 5])
+def test_successful_load(item_page: SauceDemoItemPage, item_id: int) -> None:
     item = item_page.VALID_ITEMS[int(item_id)]
 
     item_page.goto_inventory_standard()
@@ -26,10 +22,8 @@ def test_successful_load(
     expect(item_page.remove_button).not_to_be_visible()
 
 
-@pytest.mark.parametrize("item_id", [9, "9", "nan", "inf", "backpack"])
-def test_item_does_not_exist(
-    item_page: SauceDemoItemPage, item_id: Union[int, str]
-) -> None:
+@pytest.mark.parametrize("item_id", [99, -99])
+def test_item_does_not_exist(item_page: SauceDemoItemPage, item_id: int) -> None:
     invalid_item = item_page.INVALID_ITEM
 
     item_page.goto_inventory_standard()

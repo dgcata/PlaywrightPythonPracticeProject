@@ -7,7 +7,7 @@ from pages.login_page import SauceDemoLoginPage
 def test_successful_load(login_page: SauceDemoLoginPage) -> None:
     expect(login_page.login_container).to_be_visible()
     expect(login_page.page).to_have_url(login_page.MAIN_URL)
-    expect(login_page.page).to_have_title("Swag Labs")
+    expect(login_page.page).to_have_title(login_page.PAGE_TITLE)
 
 
 @pytest.mark.parametrize(
@@ -70,6 +70,19 @@ def test_successful_login(login_page: SauceDemoLoginPage, username: str) -> None
         (
             "standarduser",
             "secret_sauce",
+            "do not match any user in this service",
+        ),
+        # case-sensitivity
+        (
+            # first letter in username is upper case
+            "Standard_user",
+            "secret_sauce",
+            "do not match any user in this service",
+        ),
+        (
+            # first letter in password is upper case
+            "standard_user",
+            "Secret_sauce",
             "do not match any user in this service",
         ),
         # locked out user

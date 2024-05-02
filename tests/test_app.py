@@ -69,16 +69,16 @@ def test_adding_products_from_item_page(
 
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
 def test_removing_product_from_inventory_page(
-    inventory_page__buy_all: SauceDemoInventoryPage,
+    buy_all_items_from_inventory: SauceDemoInventoryPage,
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
+    item_to_remove = buy_all_items_from_inventory.VALID_ITEMS[item_to_remove_id]
 
     # removes item first in the inventory
     # page before going to the cart page
-    inventory_page__buy_all.remove_item_from_cart(item_to_remove_id)
-    inventory_page__buy_all.goto_cart()
+    buy_all_items_from_inventory.remove_item_from_cart(item_to_remove_id)
+    buy_all_items_from_inventory.goto_cart()
 
     expect(cart_page.cart_list).not_to_contain_text(item_to_remove.item_name)
     expect(
@@ -88,15 +88,15 @@ def test_removing_product_from_inventory_page(
 
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
 def test_removing_product_from_cart_page(
-    inventory_page__buy_all: SauceDemoInventoryPage,
+    buy_all_items_from_inventory: SauceDemoInventoryPage,
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
+    item_to_remove = buy_all_items_from_inventory.VALID_ITEMS[item_to_remove_id]
 
     # goes to the cart page first before
     # removing the item in the cart page
-    inventory_page__buy_all.goto_cart()
+    buy_all_items_from_inventory.goto_cart()
 
     expect(cart_page.cart_list).to_contain_text(item_to_remove.item_name)
 
@@ -110,17 +110,17 @@ def test_removing_product_from_cart_page(
 
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
 def test_removing_product_from_item_page(
-    inventory_page__buy_all: SauceDemoInventoryPage,
+    buy_all_items_from_inventory: SauceDemoInventoryPage,
     item_page: SauceDemoItemPage,
     cart_page: SauceDemoCartPage,
     item_to_remove_id: int,
 ) -> None:
-    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
+    item_to_remove = buy_all_items_from_inventory.VALID_ITEMS[item_to_remove_id]
 
     # goes to the specific item page first
     # then removes the item there before
     # going to the cart page
-    inventory_page__buy_all.goto_item_page(item_to_remove_id)
+    buy_all_items_from_inventory.goto_item_page(item_to_remove_id)
     item_page.remove_item_from_cart()
     item_page.goto_cart()
 
@@ -217,12 +217,12 @@ def test_checkout_with_two_items(
 
 
 def test_checkout_with_all_items(
-    inventory_page__buy_all: SauceDemoInventoryPage,
+    buy_all_items_from_inventory: SauceDemoInventoryPage,
     cart_page: SauceDemoCartPage,
     checkout_pages: SauceDemoCheckoutPages,
 ) -> None:
     item_price_list = [
-        item.item_price for item in inventory_page__buy_all.VALID_ITEMS.values()
+        item.item_price for item in buy_all_items_from_inventory.VALID_ITEMS.values()
     ]
 
     (
@@ -230,14 +230,16 @@ def test_checkout_with_all_items(
         tax_value,
         total_value,
     ) = calculate_subtotal_tax_and_total(
-        inventory_page__buy_all.TAX_RATE,
+        buy_all_items_from_inventory.TAX_RATE,
         *item_price_list,
     )
 
     expect(
-        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+        buy_all_items_from_inventory.page.get_by_role("button").filter(
+            has_text="Remove"
+        )
     ).to_have_count(6)
-    inventory_page__buy_all.goto_cart()
+    buy_all_items_from_inventory.goto_cart()
 
     cart_page.checkout()
 
@@ -254,38 +256,42 @@ def test_checkout_with_all_items(
 
     checkout_pages.go_back_to_inventory()
     expect(
-        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+        buy_all_items_from_inventory.page.get_by_role("button").filter(
+            has_text="Remove"
+        )
     ).to_have_count(0)
 
 
 @pytest.mark.parametrize("item_to_remove_id", [0, 1, 2, 3, 4, 5])
 def test_checkout_without_one_item(
-    inventory_page__buy_all: SauceDemoInventoryPage,
+    buy_all_items_from_inventory: SauceDemoInventoryPage,
     cart_page: SauceDemoCartPage,
     checkout_pages: SauceDemoCheckoutPages,
     item_to_remove_id: int,
 ) -> None:
     item_price_list = [
         item.item_price
-        for item_id, item in inventory_page__buy_all.VALID_ITEMS.items()
+        for item_id, item in buy_all_items_from_inventory.VALID_ITEMS.items()
         if item_id != item_to_remove_id
     ]
-    item_to_remove = inventory_page__buy_all.VALID_ITEMS[item_to_remove_id]
+    item_to_remove = buy_all_items_from_inventory.VALID_ITEMS[item_to_remove_id]
 
     (
         sub_total,
         tax_value,
         total_value,
     ) = calculate_subtotal_tax_and_total(
-        inventory_page__buy_all.TAX_RATE,
+        buy_all_items_from_inventory.TAX_RATE,
         *item_price_list,
     )
 
-    inventory_page__buy_all.remove_item_from_cart(item_to_remove_id)
+    buy_all_items_from_inventory.remove_item_from_cart(item_to_remove_id)
     expect(
-        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+        buy_all_items_from_inventory.page.get_by_role("button").filter(
+            has_text="Remove"
+        )
     ).to_have_count(5)
-    inventory_page__buy_all.goto_cart()
+    buy_all_items_from_inventory.goto_cart()
 
     cart_page.checkout()
 
@@ -296,7 +302,7 @@ def test_checkout_without_one_item(
     # and sometimes it is non-terminating, this is an issue on sauce lab's end
     # adding this block to avoid flakiness in the subtotal_label, remove when Sauce Labs fixes this ui issue
     subtotal_label = calculate_subtotal_tax_and_total(
-        inventory_page__buy_all.TAX_RATE,
+        buy_all_items_from_inventory.TAX_RATE,
         # text_content() -> str("Item total: $[:float]"), i.e. float starts at the 13th index
         checkout_pages.subtotal_label.text_content()[13:],  # type:ignore[index]
     )[0]
@@ -315,5 +321,7 @@ def test_checkout_without_one_item(
 
     checkout_pages.go_back_to_inventory()
     expect(
-        inventory_page__buy_all.page.get_by_role("button").filter(has_text="Remove")
+        buy_all_items_from_inventory.page.get_by_role("button").filter(
+            has_text="Remove"
+        )
     ).to_have_count(0)
