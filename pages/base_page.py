@@ -1,7 +1,7 @@
 import sys
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Any, Dict, Final
+from typing import Any
 
 from playwright.sync_api import Page
 
@@ -15,7 +15,7 @@ class SauceDemoItem:
 
 class SauceDemoBasePage:
     MAIN_URL = "https://www.saucedemo.com/"
-    URLS: Final[Dict[str, str]] = {
+    URLS = {
         "inventory": MAIN_URL + "inventory.html",
         "item": MAIN_URL + "inventory-item.html?id={}",
         "cart": MAIN_URL + "cart.html",
@@ -32,7 +32,7 @@ class SauceDemoBasePage:
     )
     LOCKED_OUT_USER = "locked_out_user"
     PASSWORD = "secret_sauce"
-    VALID_ITEMS: Final[Dict[int, SauceDemoItem]] = {
+    VALID_ITEMS = {
         0: SauceDemoItem(
             item_name="Sauce Labs Bike Light",
             item_price=Decimal("9.99"),

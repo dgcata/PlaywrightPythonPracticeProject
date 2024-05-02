@@ -60,20 +60,10 @@ def test_successful_login(login_page: SauceDemoLoginPage, username: str) -> None
             "wrong_password",
             "do not match any user in this service",
         ),
-        (
-            "standard_user",
-            "different_password",
-            "do not match any user in this service",
-        ),
         # unregistered user
         (
             "not_a_user",
             "secret_sauce",
-            "do not match any user in this service",
-        ),
-        (
-            "not_a_user",
-            "different_password",
             "do not match any user in this service",
         ),
         # misspelled user

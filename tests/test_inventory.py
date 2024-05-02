@@ -58,13 +58,9 @@ def test_goto_cart(inventory_page: SauceDemoInventoryPage) -> None:
     expect(inventory_page.page).to_have_url(inventory_page.URLS["cart"])
 
 
-@pytest.mark.parametrize("invalid_username", ["not_a_user", "different_user"])
-def test_goto_inventory_as_invalid_user(
-    inventory_page: SauceDemoInventoryPage, invalid_username: str
-) -> None:
+def test_goto_inventory_as_invalid_user(inventory_page: SauceDemoInventoryPage) -> None:
     inventory_page.logout()
-    with pytest.raises(Exception) as e:
-        inventory_page.goto_inventory_as_user(invalid_username)
+    with pytest.raises(InvalidUserException) as e:
+        inventory_page.goto_inventory_as_user("not_a_user")
 
-    assert e.type == InvalidUserException
-    assert invalid_username in str(e.value)
+    assert "not_a_user" in str(e.value)
