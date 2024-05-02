@@ -4,32 +4,41 @@ from playwright.sync_api import expect
 from pages.item_page import SauceDemoItemPage
 
 
-@pytest.mark.parametrize(
-    "item_id, item_name",
-    [
-        (0, "Sauce Labs Bike Light"),
-        (1, "Sauce Labs Bolt T-Shirt"),
-        (2, "Sauce Labs Onesie"),
-        (3, "Test.allTheThings() T-Shirt (Red)"),
-        (4, "Sauce Labs Backpack"),
-        (5, "Sauce Labs Fleece Jacket"),
-    ],
-)
-def test_successful_load(
-    item_page: SauceDemoItemPage, item_id: int, item_name: str
-) -> None:
+@pytest.mark.parametrize("item_id", [0, 1, 2, 3, 4, 5])
+def test_successful_load(item_page: SauceDemoItemPage, item_id: int) -> None:
+    item = item_page.VALID_ITEMS[int(item_id)]
+
     item_page.goto_inventory_standard()
     item_page.goto_item_page(item_id)
 
     expect(item_page.page).to_have_url(item_page.URLS["item"].format(item_id))
 
-    expect(item_page.item_name).to_contain_text(item_name)
-    expect(item_page.item_description).to_be_visible()
-    expect(item_page.item_price).to_be_visible()
+    expect(item_page.item_name).to_contain_text(item.item_name)
+    expect(item_page.item_description).to_contain_text(item.item_desc)
+    expect(item_page.item_price).to_contain_text(str(item.item_price))
     expect(item_page.item_image).to_be_visible()
     expect(item_page.back_to_products_button).to_be_visible()
     expect(item_page.add_to_cart_button).to_be_visible()
     expect(item_page.remove_button).not_to_be_visible()
+
+
+@pytest.mark.parametrize("item_id", [99, -99])
+def test_item_does_not_exist(item_page: SauceDemoItemPage, item_id: int) -> None:
+    invalid_item = item_page.INVALID_ITEM
+
+    item_page.goto_inventory_standard()
+    item_page.goto_item_page(item_id)
+
+    expect(item_page.page).to_have_url(item_page.URLS["item"].format(item_id))
+
+    expect(item_page.item_name).to_contain_text(invalid_item.item_name)
+    expect(item_page.item_description).to_contain_text(invalid_item.item_desc)
+    expect(item_page.item_price).to_contain_text(str(invalid_item.item_price))
+    expect(item_page.item_image).to_be_visible()
+    expect(item_page.back_to_products_button).to_be_visible()
+    expect(item_page.remove_button).not_to_be_visible()
+    # an issue on Sauce Labs end, you shouldn't be able to add an invalid item to the cart
+    # expect(item_page.add_to_cart_button).not_to_be_visible()
 
 
 def test_can_add_item_from_item_page(

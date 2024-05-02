@@ -1,7 +1,12 @@
 import pytest
 from playwright.sync_api import expect
 
-from pages.inventory_page import SauceDemoInventoryPage
+from pages.login_page import InvalidUserException
+
+from pages.inventory_page import (  # isort: skip
+    ItemDoesNotExistException,
+    SauceDemoInventoryPage,
+)
 
 
 def test_successful_load(inventory_page: SauceDemoInventoryPage) -> None:
@@ -57,7 +62,26 @@ def test_goto_cart(inventory_page: SauceDemoInventoryPage) -> None:
     expect(inventory_page.page).to_have_url(inventory_page.URLS["cart"])
 
 
-@pytest.mark.skip("still in development")
-def test_filter(inventory_page: SauceDemoInventoryPage) -> None:
-    # implement in the future
-    ...
+def test_goto_inventory_as_invalid_user(inventory_page: SauceDemoInventoryPage) -> None:
+    inventory_page.logout()
+    with pytest.raises(InvalidUserException) as e:
+        inventory_page.goto_inventory_as_user("not_a_user")
+
+    assert "not_a_user" in str(e.value)
+
+
+@pytest.mark.parametrize("item_id", [99, -99])
+def test_item_does_not_exist(
+    inventory_page: SauceDemoInventoryPage, item_id: int
+) -> None:
+    # going to the item page of a non-existing item
+    with pytest.raises(ItemDoesNotExistException) as e1:
+        inventory_page.goto_item_page(item_id)
+
+    assert str(item_id) in str(e1.value)
+
+    # adding non-existing item to cart
+    with pytest.raises(ItemDoesNotExistException) as e2:
+        inventory_page.add_item_to_cart(item_id)
+
+    assert str(item_id) in str(e2.value)

@@ -1,11 +1,12 @@
 import sys
 from dataclasses import dataclass
 from decimal import Decimal
+from typing import Any
 
 from playwright.sync_api import Page
 
 
-@dataclass
+@dataclass(frozen=True)
 class SauceDemoItem:
     item_name: str
     item_price: Decimal
@@ -13,8 +14,7 @@ class SauceDemoItem:
 
 
 class SauceDemoBasePage:
-    # TODO: should all of these remain as class attributes
-    # or should it be implemented as read-only object attributes
+    PAGE_TITLE = "Swag Labs"
     MAIN_URL = "https://www.saucedemo.com/"
     URLS = {
         "inventory": MAIN_URL + "inventory.html",
@@ -24,13 +24,14 @@ class SauceDemoBasePage:
         "checkout_two": MAIN_URL + "checkout-step-two.html",
         "checkout_done": MAIN_URL + "checkout-complete.html",
     }
-    VALID_USERNAMES = [
+    VALID_USERS = (
         "standard_user",
         "problem_user",
         "performance_glitch_user",
         "error_user",
         "visual_user",
-    ]
+    )
+    LOCKED_OUT_USER = "locked_out_user"
     PASSWORD = "secret_sauce"
     VALID_ITEMS = {
         0: SauceDemoItem(
@@ -81,5 +82,25 @@ class SauceDemoBasePage:
         if "--debug" in sys.argv:
             self.pause()
 
+    def __setattr__(self, name: str, value: Any) -> None:
+        # ensure class attributes are read-only
+        if hasattr(self, name):
+            raise AttributeError(f"{name} is read-only")
+        else:
+            super().__setattr__(name, value)
+
     def pause(self) -> None:
+        """Call this method in a specific test you want to debug.
+        Example:
+
+        def test_sample(login_page: SauceDemoLoginPage) -> None:
+            login_page.pause()
+            # rest of the test
+
+        Essentially this provides a shortcut, instead of typing
+        `login_page.page.pause()`, `cart_page.page.pause()`, etc.,
+        We can instead skip the call to the instance attribute.
+
+        NOTE: flag '--headed' is still neccessary"""
+
         self.page.pause()

@@ -4,25 +4,24 @@ from playwright.sync_api import expect
 from pages.checkout_pages import SauceDemoCheckoutPages
 
 
-def test_successful_load(checkout_pages: SauceDemoCheckoutPages) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
+def test_successful_load(
+    checkout_with_one_item: SauceDemoCheckoutPages,
+) -> None:
+    expect(checkout_with_one_item.page).to_have_url(
+        checkout_with_one_item.URLS["checkout_one"]
+    )
 
-    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_one"])
+    expect(checkout_with_one_item.cancel_button).to_be_visible()
+    expect(checkout_with_one_item.continue_button).to_be_visible()
+    expect(checkout_with_one_item.checkout_info).to_be_visible()
 
-    expect(checkout_pages.cancel_button).to_be_visible()
-    expect(checkout_pages.continue_button).to_be_visible()
-    expect(checkout_pages.checkout_info).to_be_visible()
-
-    expect(checkout_pages.cart_list).not_to_be_visible()
-    expect(checkout_pages.subtotal_label).not_to_be_visible()
-    expect(checkout_pages.tax_label).not_to_be_visible()
-    expect(checkout_pages.total_label).not_to_be_visible()
-    expect(checkout_pages.finish_button).not_to_be_visible()
-    expect(checkout_pages.back_to_home_button).not_to_be_visible()
-    expect(checkout_pages.complete_checkout_container).not_to_be_visible()
+    expect(checkout_with_one_item.cart_list).not_to_be_visible()
+    expect(checkout_with_one_item.subtotal_label).not_to_be_visible()
+    expect(checkout_with_one_item.tax_label).not_to_be_visible()
+    expect(checkout_with_one_item.total_label).not_to_be_visible()
+    expect(checkout_with_one_item.finish_button).not_to_be_visible()
+    expect(checkout_with_one_item.back_to_home_button).not_to_be_visible()
+    expect(checkout_with_one_item.complete_checkout_container).not_to_be_visible()
 
 
 @pytest.mark.parametrize(
@@ -34,31 +33,28 @@ def test_successful_load(checkout_pages: SauceDemoCheckoutPages) -> None:
     ],
 )
 def test_customer_details__succeeds(
-    checkout_pages: SauceDemoCheckoutPages,
+    checkout_with_one_item: SauceDemoCheckoutPages,
     first_name: str,
     last_name: str,
     postal_code: str,
 ) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
+    checkout_with_one_item.enter_customer_details(first_name, last_name, postal_code)
 
-    checkout_pages.enter_customer_details(first_name, last_name, postal_code)
+    expect(checkout_with_one_item.page).to_have_url(
+        checkout_with_one_item.URLS["checkout_two"]
+    )
 
-    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_two"])
+    expect(checkout_with_one_item.cancel_button).to_be_visible()
+    expect(checkout_with_one_item.cart_list).to_be_visible()
+    expect(checkout_with_one_item.subtotal_label).to_be_visible()
+    expect(checkout_with_one_item.tax_label).to_be_visible()
+    expect(checkout_with_one_item.total_label).to_be_visible()
+    expect(checkout_with_one_item.finish_button).to_be_visible()
 
-    expect(checkout_pages.cancel_button).to_be_visible()
-    expect(checkout_pages.cart_list).to_be_visible()
-    expect(checkout_pages.subtotal_label).to_be_visible()
-    expect(checkout_pages.tax_label).to_be_visible()
-    expect(checkout_pages.total_label).to_be_visible()
-    expect(checkout_pages.finish_button).to_be_visible()
-
-    expect(checkout_pages.continue_button).not_to_be_visible()
-    expect(checkout_pages.checkout_info).not_to_be_visible()
-    expect(checkout_pages.back_to_home_button).not_to_be_visible()
-    expect(checkout_pages.complete_checkout_container).not_to_be_visible()
+    expect(checkout_with_one_item.continue_button).not_to_be_visible()
+    expect(checkout_with_one_item.checkout_info).not_to_be_visible()
+    expect(checkout_with_one_item.back_to_home_button).not_to_be_visible()
+    expect(checkout_with_one_item.complete_checkout_container).not_to_be_visible()
 
 
 @pytest.mark.parametrize(
@@ -74,111 +70,101 @@ def test_customer_details__succeeds(
     ],
 )
 def test_customer_details__fails(
-    checkout_pages: SauceDemoCheckoutPages,
+    checkout_with_one_item: SauceDemoCheckoutPages,
     first_name: str,
     last_name: str,
     postal_code: str,
     error_msg: str,
 ) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
-
     # assertions before entering erroneous customer details
-    expect(checkout_pages.error_container).not_to_be_visible()
+    expect(checkout_with_one_item.error_container).not_to_be_visible()
 
     # entering erroneous customer details
-    checkout_pages.enter_customer_details(first_name, last_name, postal_code)
+    checkout_with_one_item.enter_customer_details(first_name, last_name, postal_code)
 
     # assertions after entering erroneous customer details
-    expect(checkout_pages.error_container).to_be_visible()
-    expect(checkout_pages.error_container).to_contain_text(error_msg)
+    expect(checkout_with_one_item.error_container).to_be_visible()
+    expect(checkout_with_one_item.error_container).to_contain_text(error_msg)
 
 
-def test_complete_checkout(checkout_pages: SauceDemoCheckoutPages) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
-    checkout_pages.enter_customer_details("John", "Doe", "6000")
-    checkout_pages.finish_checkout()
+def test_complete_checkout(checkout_with_one_item: SauceDemoCheckoutPages) -> None:
+    checkout_with_one_item.enter_customer_details("John", "Doe", "6000")
+    checkout_with_one_item.finish_checkout()
 
-    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_done"])
+    expect(checkout_with_one_item.page).to_have_url(
+        checkout_with_one_item.URLS["checkout_done"]
+    )
 
-    expect(checkout_pages.back_to_home_button).to_be_visible()
-    expect(checkout_pages.complete_checkout_container).to_be_visible()
+    expect(checkout_with_one_item.back_to_home_button).to_be_visible()
+    expect(checkout_with_one_item.complete_checkout_container).to_be_visible()
 
-    expect(checkout_pages.cart_list).not_to_be_visible()
-    expect(checkout_pages.subtotal_label).not_to_be_visible()
-    expect(checkout_pages.tax_label).not_to_be_visible()
-    expect(checkout_pages.total_label).not_to_be_visible()
-    expect(checkout_pages.finish_button).not_to_be_visible()
-    expect(checkout_pages.continue_button).not_to_be_visible()
-    expect(checkout_pages.checkout_info).not_to_be_visible()
-    expect(checkout_pages.cancel_button).not_to_be_visible()
+    expect(checkout_with_one_item.cart_list).not_to_be_visible()
+    expect(checkout_with_one_item.subtotal_label).not_to_be_visible()
+    expect(checkout_with_one_item.tax_label).not_to_be_visible()
+    expect(checkout_with_one_item.total_label).not_to_be_visible()
+    expect(checkout_with_one_item.finish_button).not_to_be_visible()
+    expect(checkout_with_one_item.continue_button).not_to_be_visible()
+    expect(checkout_with_one_item.checkout_info).not_to_be_visible()
+    expect(checkout_with_one_item.cancel_button).not_to_be_visible()
 
 
 def test_go_back_to_inventory_after_checkout(
-    checkout_pages: SauceDemoCheckoutPages,
+    checkout_with_one_item: SauceDemoCheckoutPages,
 ) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
-    checkout_pages.enter_customer_details("John", "Doe", "6000")
-    checkout_pages.finish_checkout()
-    checkout_pages.go_back_to_inventory()
+    checkout_with_one_item.enter_customer_details("John", "Doe", "6000")
+    checkout_with_one_item.finish_checkout()
+    checkout_with_one_item.go_back_to_inventory()
 
-    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["inventory"])
+    expect(checkout_with_one_item.page).to_have_url(
+        checkout_with_one_item.URLS["inventory"]
+    )
 
 
-def test_can_logout_from_step_one(checkout_pages: SauceDemoCheckoutPages) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
-
+def test_can_logout_from_step_one(
+    checkout_with_one_item: SauceDemoCheckoutPages,
+) -> None:
     # assertions before logout
-    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_one"])
+    expect(checkout_with_one_item.page).to_have_url(
+        checkout_with_one_item.URLS["checkout_one"]
+    )
 
     # logout
-    checkout_pages.logout()
+    checkout_with_one_item.logout()
 
     # assertions after logout
-    expect(checkout_pages.page).to_have_url(checkout_pages.MAIN_URL)
+    expect(checkout_with_one_item.page).to_have_url(checkout_with_one_item.MAIN_URL)
 
 
-def test_can_logout_from_step_two(checkout_pages: SauceDemoCheckoutPages) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
-    checkout_pages.enter_customer_details("John", "Doe", "6000")
+def test_can_logout_from_step_two(
+    checkout_with_one_item: SauceDemoCheckoutPages,
+) -> None:
+    checkout_with_one_item.enter_customer_details("John", "Doe", "6000")
 
     # assertions before logout
-    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_two"])
+    expect(checkout_with_one_item.page).to_have_url(
+        checkout_with_one_item.URLS["checkout_two"]
+    )
 
     # logout
-    checkout_pages.logout()
+    checkout_with_one_item.logout()
 
     # assertions after logout
-    expect(checkout_pages.page).to_have_url(checkout_pages.MAIN_URL)
+    expect(checkout_with_one_item.page).to_have_url(checkout_with_one_item.MAIN_URL)
 
 
-def test_can_logout_from_finished_page(checkout_pages: SauceDemoCheckoutPages) -> None:
-    checkout_pages.goto_inventory_standard()
-    checkout_pages.add_item_to_cart(0)
-    checkout_pages.goto_cart()
-    checkout_pages.checkout()
-    checkout_pages.enter_customer_details("John", "Doe", "6000")
-    checkout_pages.finish_checkout()
+def test_can_logout_from_finished_page(
+    checkout_with_one_item: SauceDemoCheckoutPages,
+) -> None:
+    checkout_with_one_item.enter_customer_details("John", "Doe", "6000")
+    checkout_with_one_item.finish_checkout()
 
     # assertions before logout
-    expect(checkout_pages.page).to_have_url(checkout_pages.URLS["checkout_done"])
+    expect(checkout_with_one_item.page).to_have_url(
+        checkout_with_one_item.URLS["checkout_done"]
+    )
 
     # logout
-    checkout_pages.logout()
+    checkout_with_one_item.logout()
 
     # assertions after logout
-    expect(checkout_pages.page).to_have_url(checkout_pages.MAIN_URL)
+    expect(checkout_with_one_item.page).to_have_url(checkout_with_one_item.MAIN_URL)
