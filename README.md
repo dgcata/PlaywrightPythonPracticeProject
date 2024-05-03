@@ -21,7 +21,7 @@ My task is to create the following test cases:
 2. Test Case 2: Adding Products
     * After loggin-in, in the Products Page:
         * Add one specific product (Sauce Labs Fleece Jacket) to the shopping cart
-        * Add any one random product to the shopping cart, sleection should be dynamic
+        * Add any one random product to the shopping cart, selection should be dynamic
     * Navigate to the shopping cart
     * Verify that there are 2 products successfully added to the cart
 3. Test Case 3: Checkout Page
