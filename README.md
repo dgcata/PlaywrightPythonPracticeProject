@@ -15,7 +15,7 @@ My task is to create the following test cases:
 
 1. Test Case 1: Login Page
     * Open the web application
-    * Verigy that the lign page is displayed
+    * Verify that the login page is displayed
     * Enter valid credentials and click the login button
     * Verify that the Home/Products page is displayed after successful login
 2. Test Case 2: Adding Products
@@ -26,7 +26,7 @@ My task is to create the following test cases:
     * Verify that there are 2 products successfully added to the cart
 3. Test Case 3: Checkout Page
     * In the Shopping cart page, proceed to the checkout page
-    * On the Shopping information form page, fill out the shipping information form by entering you First Name, Last Name and Zip Code
+    * On the Shopping information form page, fill out the shipping information form by entering your First Name, Last Name and Zip Code
     * Verify that the changes are reflected on the shipping information form page
     * Complete the purchases process and verify that the order is successful
 
@@ -62,7 +62,7 @@ To run this project:
     pytest --headed --debug
     ```
 
-    You may or may not specify browsers
+    You may or may not specify browsers. **_NOTE_: `--headed` flag is necessary**
 
 6. To run a specific test file, run the following code:
 
@@ -80,4 +80,33 @@ To run this project:
 
     ```bash
     pytest -k test_sample --browser chromium --headed --debug
+    ```
+
+7. To enable video recording:
+
+    ```bash
+    pytest --video on
+    ```
+
+    This is best used with slow motion (so that you can see each
+    action clearly), enter the duration of the delay in milliseconds:
+
+    ```bash
+    pytest --slowmo 500 --video on
+    ```
+
+    These commands still work with whatever combination from the above, for example:
+
+    ```bash
+    pytest -k test_sample --video on --slowmo 500 --browser firefox --browser webkit --headed
+    ```
+
+    This command will run playwright for `test_sample.py` with the firefox and
+    webkit browsers, actions are delayed by 500 milliseconds and video recording is turned on.
+
+8. For more information, run:
+
+    ```bash
+    pytest -h
+    playwright -h
     ```
